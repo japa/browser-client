@@ -7,7 +7,4 @@
  * file that was distributed with this source code.
  */
 
-export * from './src/types.js'
-export * from './modules/playwright'
-export { browserClient } from './src/plugin'
-export { decorateBrowser } from './src/browser'
+export * from 'playwright'
