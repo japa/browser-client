@@ -7,7 +7,13 @@
  * file that was distributed with this source code.
  */
 
-import { Page, BrowserContext, Response, Browser } from '../modules/playwright'
+import {
+  Page,
+  Browser,
+  Response,
+  BrowserContext,
+  BrowserContextOptions,
+} from '../modules/playwright'
 
 /**
  * Decorators are used to extend the `page`, `context`, and the
@@ -22,9 +28,19 @@ export type Decorator = {
 }
 
 /**
+ * Options for the visit method
+ */
+export type VisitOptions = Exclude<Parameters<Page['goto']>[1], undefined>
+
+/**
  * Configuration accepted by the plugin.
  */
 export type PluginConfig = {
+  /**
+   * Options for the context created for every test
+   */
+  contextOptions?: BrowserContextOptions
+
   /**
    * Custom decorators to apply
    */

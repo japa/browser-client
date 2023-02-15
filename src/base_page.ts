@@ -7,6 +7,7 @@
  * file that was distributed with this source code.
  */
 
+import type { VisitOptions } from './types.js'
 import type { Page, BrowserContext } from '../modules/playwright'
 
 /**
@@ -15,5 +16,6 @@ import type { Page, BrowserContext } from '../modules/playwright'
  */
 export class BasePage {
   declare url: string
+  declare visitOptions: VisitOptions
   constructor(public parent: Page, public context: BrowserContext) {}
 }

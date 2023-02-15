@@ -86,7 +86,7 @@ export function browserClient(config: PluginConfig) {
         suite.onGroup((group) => {
           group.each.setup(async ({ context }) => {
             context.browser = browser
-            context.browserContext = await browser.newContext()
+            context.browserContext = await browser.newContext(config.contextOptions)
             return () => context.browserContext.close()
           })
         })
@@ -97,7 +97,7 @@ export function browserClient(config: PluginConfig) {
         suite.onTest((test) => {
           test.setup(async ({ context }) => {
             context.browser = browser
-            context.browserContext = await browser.newContext()
+            context.browserContext = await browser.newContext(config.contextOptions)
             return () => context.browserContext.close()
           })
         })

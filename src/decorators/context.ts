@@ -7,9 +7,9 @@
  * file that was distributed with this source code.
  */
 
-import type { Decorator } from '../types'
 import type { BasePage } from '../base_page'
 import type { Page } from '../../modules/playwright'
+import type { Decorator, VisitOptions } from '../types'
 
 /**
  * Types for custom methods
@@ -19,7 +19,7 @@ declare module '../../modules/playwright' {
     /**
      * Open a new page and visit a URL
      */
-    visit(url: string): Promise<Page>
+    visit(url: string, options?: VisitOptions): Promise<Page>
 
     /**
      * Open a new page using a page model
@@ -44,7 +44,7 @@ export const addVisitMethod: Decorator = {
   context(context) {
     context.visit = async function <PageModel extends typeof BasePage>(
       UrlOrPage: string | PageModel,
-      callback?: (page: InstanceType<PageModel>) => void | Promise<void>
+      callbackOrOptions?: ((page: InstanceType<PageModel>) => void | Promise<void>) | VisitOptions
     ): Promise<void | InstanceType<PageModel> | Page> {
       const page = await context.newPage()
 
@@ -53,7 +53,7 @@ export const addVisitMethod: Decorator = {
        * and return value
        */
       if (typeof UrlOrPage === 'string') {
-        await page.goto(UrlOrPage)
+        await page.goto(UrlOrPage, typeof callbackOrOptions !== 'function' ? callbackOrOptions : {})
         return page
       }
 
@@ -65,13 +65,13 @@ export const addVisitMethod: Decorator = {
       /**
        * Visit the url of the base model
        */
-      await page.goto(pageInstance.url)
+      await page.goto(pageInstance.url, pageInstance.visitOptions)
 
       /**
        * Invoke callback if exists
        */
-      if (callback) {
-        await callback(pageInstance as InstanceType<PageModel>)
+      if (typeof callbackOrOptions === 'function') {
+        await callbackOrOptions(pageInstance as InstanceType<PageModel>)
         return
       }
 

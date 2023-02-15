@@ -33,6 +33,24 @@ test.group('Visit', () => {
     assert.equal(await page.locator('body').innerText(), 'hello world')
   })
 
+  test('define options via visit method', async ({ assert, cleanup }) => {
+    const server = new ServerFactory()
+    await server.create((req, res) => {
+      res.write(req.headers.referer)
+      res.end()
+    })
+
+    const browser = decorateBrowser(await chromium.launch(), [addVisitMethod])
+    cleanup(async () => {
+      await browser.close()
+      await server.close()
+    })
+
+    const context = await browser.newContext()
+    const page = await context.visit(server.url, { referer: 'http://foo.com' })
+    assert.equal(await page.locator('body').innerText(), 'http://foo.com/')
+  })
+
   test('visit a page model', async ({ assert, cleanup }) => {
     const server = new ServerFactory()
     await server.create((_, res) => {
@@ -51,6 +69,33 @@ test.group('Visit', () => {
 
       async assertBody() {
         assert.equal(await this.parent.locator('body').innerText(), 'hello world')
+      }
+    }
+
+    const context = await browser.newContext()
+    const page = await context.visit(HomePage)
+    await page.assertBody()
+  })
+
+  test('define options using visit property', async ({ assert, cleanup }) => {
+    const server = new ServerFactory()
+    await server.create((req, res) => {
+      res.write(req.headers.referer)
+      res.end()
+    })
+
+    const browser = decorateBrowser(await chromium.launch(), [addVisitMethod])
+    cleanup(async () => {
+      await browser.close()
+      await server.close()
+    })
+
+    class HomePage extends BasePage {
+      url = server.url
+      visitOptions = { referer: 'http://foo.com' }
+
+      async assertBody() {
+        assert.equal(await this.parent.locator('body').innerText(), 'http://foo.com/')
       }
     }
 
