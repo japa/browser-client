@@ -85,8 +85,15 @@ export function browserClient(config: PluginConfig) {
          */
         suite.onGroup((group) => {
           group.each.setup(async ({ context }) => {
+            const host = process.env.HOST
+            const port = process.env.PORT
+            const baseURL = host && port ? `http://${host}:${port}` : undefined
+
             context.browser = browser
-            context.browserContext = await browser.newContext(config.contextOptions)
+            context.browserContext = await browser.newContext({
+              baseURL: baseURL,
+              ...config.contextOptions,
+            })
             return () => context.browserContext.close()
           })
         })
