@@ -1,6 +1,6 @@
 {
   "name": "@japa/browser-client",
-  "version": "1.0.1",
+  "version": "0.0.0",
   "description": "Browser client built on top of Playwright for writing end to end tests",
   "main": "./build/index.js",
   "files": [
