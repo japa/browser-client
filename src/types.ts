@@ -37,6 +37,14 @@ export type VisitOptions = Exclude<Parameters<Page['goto']>[1], undefined>
  */
 export type PluginConfig = {
   /**
+   * Control automatic tracing of tests
+   */
+  tracing?: {
+    enabled: boolean
+    event: 'onError' | 'onTest'
+  }
+
+  /**
    * Options for the context created for every test
    */
   contextOptions?: BrowserContextOptions
