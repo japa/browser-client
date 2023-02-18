@@ -10,7 +10,7 @@
 import sinon from 'sinon'
 import { test } from '@japa/runner'
 import { chromium } from '../../modules/playwright'
-import { addPauseMethods } from '../../src/decorators/page'
+import { addPauseMethods } from '../../src/decorators/pause'
 
 test.group('Page | pauseIf', () => {
   test('pause if condition is true', async ({ assert, cleanup }) => {

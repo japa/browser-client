@@ -9,8 +9,8 @@
 
 import { PluginFn, Suite, type TestContext as TestContextClass } from '@japa/runner'
 
-import '../decorators/page'
-import '../decorators/context'
+import '../decorators/pause'
+import '../decorators/visit'
 
 import type { PluginConfig } from '../types'
 import { decorateBrowser } from '../browser'

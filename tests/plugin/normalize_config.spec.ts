@@ -8,8 +8,8 @@
  */
 
 import { test } from '@japa/runner'
-import { addPauseMethods } from '../../src/decorators/page'
-import { addVisitMethod } from '../../src/decorators/context'
+import { addPauseMethods } from '../../src/decorators/pause'
+import { addVisitMethod } from '../../src/decorators/visit'
 import { normalizeConfig } from '../../src/plugin/normalize_config'
 
 test.group('Nornalize config', () => {

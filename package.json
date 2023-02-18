@@ -46,6 +46,7 @@
     "@types/cookie": "^0.5.1",
     "@types/cuid": "^2.0.1",
     "@types/node": "^18.14.0",
+    "@types/qs": "^6.9.7",
     "@types/sinon": "^10.0.13",
     "c8": "^7.13.0",
     "cookie": "^0.5.0",
@@ -103,7 +104,8 @@
   },
   "dependencies": {
     "@sindresorhus/slugify": "^1.1.0",
-    "playwright": "^1.30.0"
+    "playwright": "^1.30.0",
+    "qs": "^6.11.0"
   },
   "c8": {
     "reporter": [

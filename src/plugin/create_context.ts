@@ -33,6 +33,13 @@ export async function createContext(
     ...config.contextOptions,
   })
 
+  /**
+   * Sharing assert with page
+   */
+  context.browserContext.on('page', function (page) {
+    page.assert = context.assert
+  })
+
   return () => context.browserContext.close()
 }
 

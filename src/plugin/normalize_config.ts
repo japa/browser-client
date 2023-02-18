@@ -10,14 +10,15 @@
 import type { Config } from '@japa/runner'
 
 import { Decorator, PluginConfig } from '../types'
-import { addPauseMethods } from '../decorators/page'
-import { addVisitMethod } from '../decorators/context'
+import { addVisitMethod } from '../decorators/visit'
+import { addPauseMethods } from '../decorators/pause'
+import { addAssertions } from '../decorators/assertions'
 import { chromium, firefox, webkit } from '../../modules/playwright'
 
 /**
  * Decorators bundled by default
  */
-const BUNDLED_DECORATORS = [addVisitMethod, addPauseMethods]
+const BUNDLED_DECORATORS = [addVisitMethod, addPauseMethods, addAssertions]
 
 /**
  * Default launchers that can be selected using the '--browser' flag
