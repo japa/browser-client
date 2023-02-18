@@ -9,6 +9,9 @@
 
 import { PluginFn, Suite } from '@japa/runner'
 
+import '../decorators/page'
+import '../decorators/context'
+
 import type { PluginConfig } from '../types'
 import { decorateBrowser } from '../browser'
 import { traceActions } from './trace_actions'
