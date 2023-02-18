@@ -11,6 +11,7 @@ import { PluginFn, Suite, type TestContext as TestContextClass } from '@japa/run
 
 import '../decorators/pause'
 import '../decorators/visit'
+import '../decorators/assertions'
 
 import type { PluginConfig } from '../types'
 import { decorateBrowser } from '../browser'
