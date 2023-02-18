@@ -14,7 +14,7 @@ import type { Decorator } from '../types'
 /**
  * Types for custom methods
  */
-declare module '../../modules/playwright' {
+declare module 'playwright' {
   export interface Page {
     assert: Assert
 

@@ -10,7 +10,7 @@
 import { decoratePage } from './page'
 import type { Decorator } from './types'
 import { decorateContext } from './context'
-import type { Browser as PlayWrightBrowser, BrowserContextOptions } from '../modules/playwright'
+import type { Browser as PlayWrightBrowser, BrowserContextOptions } from 'playwright'
 
 /**
  * Decorates the browser by re-writing "newContext" and "newPage"

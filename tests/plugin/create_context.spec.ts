@@ -7,10 +7,10 @@
  * file that was distributed with this source code.
  */
 
+import { chromium } from 'playwright'
 import { Emitter, Refiner } from '@japa/core'
 import { Test, test, TestContext } from '@japa/runner'
 
-import { chromium } from '../../modules/playwright'
 import { createContext, createFakeContext } from '../../src/plugin/create_context'
 
 test.group('Create context', () => {

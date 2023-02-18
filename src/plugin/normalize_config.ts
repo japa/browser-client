@@ -8,12 +8,12 @@
  */
 
 import type { Config } from '@japa/runner'
+import { chromium, firefox, webkit } from 'playwright'
 
 import { Decorator, PluginConfig } from '../types'
 import { addVisitMethod } from '../decorators/visit'
 import { addPauseMethods } from '../decorators/pause'
 import { addAssertions } from '../decorators/assertions'
-import { chromium, firefox, webkit } from '../../modules/playwright'
 
 /**
  * Decorators bundled by default

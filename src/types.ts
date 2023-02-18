@@ -14,7 +14,7 @@ import {
   BrowserContext,
   BrowserContextOptions,
   LaunchOptions,
-} from '../modules/playwright'
+} from 'playwright'
 
 /**
  * Decorators are used to extend the `page`, `context`, and the

@@ -7,6 +7,7 @@
  * file that was distributed with this source code.
  */
 
+import type { BrowserContext, Browser as PlayWrightBrowser } from 'playwright'
 import { PluginFn, Suite, type TestContext as TestContextClass } from '@japa/runner'
 
 import '../decorators/pause'
@@ -19,7 +20,6 @@ import { traceActions } from './trace_actions'
 import { normalizeConfig } from './normalize_config'
 import { getLauncherOptions } from './get_launcher_options'
 import { createContext, createFakeContext } from './create_context'
-import type { BrowserContext, Browser as PlayWrightBrowser } from '../../modules/playwright'
 
 /**
  * Extending types

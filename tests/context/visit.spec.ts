@@ -8,8 +8,9 @@
  */
 
 import { test } from '@japa/runner'
+import { chromium } from 'playwright'
+
 import { BasePage } from '../../src/base_page'
-import { chromium } from '../../modules/playwright'
 import { decorateBrowser } from '../../src/browser'
 import { ServerFactory } from '../../factories/server'
 import { addVisitMethod } from '../../src/decorators/visit'

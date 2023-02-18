@@ -8,7 +8,7 @@
  */
 
 import type { Config } from '@japa/runner'
-import { LaunchOptions } from '../../modules/playwright'
+import { LaunchOptions } from 'playwright'
 
 /**
  * Creates launcher options from the tests runner config

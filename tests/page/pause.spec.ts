@@ -9,7 +9,8 @@
 
 import sinon from 'sinon'
 import { test } from '@japa/runner'
-import { chromium } from '../../modules/playwright'
+import { chromium } from 'playwright'
+
 import { addPauseMethods } from '../../src/decorators/pause'
 
 test.group('Page | pauseIf', () => {

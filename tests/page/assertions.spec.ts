@@ -8,7 +8,8 @@
  */
 
 import { test } from '@japa/runner'
-import { chromium } from '../../modules/playwright'
+import { chromium } from 'playwright'
+
 import { ServerFactory } from '../../factories/server'
 import { addAssertions } from '../../src/decorators/assertions'
 

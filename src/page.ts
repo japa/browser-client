@@ -8,7 +8,7 @@
  */
 
 import { Decorator } from './types'
-import type { BrowserContext, Page } from '../modules/playwright'
+import type { BrowserContext, Page } from 'playwright'
 
 /**
  * Decorates the playwright page object

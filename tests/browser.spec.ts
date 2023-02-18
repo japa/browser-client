@@ -8,9 +8,9 @@
  */
 
 import { test } from '@japa/runner'
+import { chromium } from 'playwright'
 
 import { decorateBrowser } from '../src/browser'
-import { chromium } from '../modules/playwright'
 import { ServerFactory } from '../factories/server'
 
 test.group('Browser', () => {

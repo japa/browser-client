@@ -9,7 +9,7 @@
 
 import { decoratePage } from './page'
 import type { Decorator } from './types'
-import type { BrowserContext } from '../modules/playwright'
+import type { BrowserContext } from 'playwright'
 
 /**
  * Decorates the playwright browser context

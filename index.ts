@@ -8,7 +8,6 @@
  */
 
 export * from './src/types'
-export * from './modules/playwright'
 export { BasePage } from './src/base_page'
 export { decorateBrowser } from './src/browser'
 export { browserClient } from './src/plugin/main'

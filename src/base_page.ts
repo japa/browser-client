@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import type { VisitOptions } from './types.js'
-import type { Page, BrowserContext } from '../modules/playwright'
+import type { VisitOptions } from './types'
+import type { Page, BrowserContext } from 'playwright'
 
 /**
  * Base page is used to create custom pages to be used

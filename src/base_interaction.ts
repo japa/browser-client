@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import type { Page, BrowserContext } from '../modules/playwright'
+import type { Page, BrowserContext } from 'playwright'
 
 /**
  * Interactions can be used to de-compose actions on a page to its

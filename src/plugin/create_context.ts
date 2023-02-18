@@ -8,9 +8,10 @@
  */
 
 import type { Test } from '@japa/runner'
+import type { Browser as PlayWrightBrowser } from 'playwright'
+
 import type { PluginConfig } from '../types'
 import { BrowserContextProxy, BrowserProxy } from './proxies'
-import type { Browser as PlayWrightBrowser } from '../../modules/playwright'
 
 /**
  * Creates a new browser context

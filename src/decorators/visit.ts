@@ -7,14 +7,14 @@
  * file that was distributed with this source code.
  */
 
+import type { Page } from 'playwright'
 import type { BasePage } from '../base_page'
-import type { Page } from '../../modules/playwright'
 import type { Decorator, VisitOptions } from '../types'
 
 /**
  * Types for custom methods
  */
-declare module '../../modules/playwright' {
+declare module 'playwright' {
   export interface BrowserContext {
     /**
      * Open a new page and visit a URL
