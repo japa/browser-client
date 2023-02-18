@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { PluginFn, Suite } from '@japa/runner'
+import { PluginFn, Suite, type TestContext as TestContextClass } from '@japa/runner'
 
 import '../decorators/page'
 import '../decorators/context'
@@ -16,12 +16,9 @@ import type { PluginConfig } from '../types'
 import { decorateBrowser } from '../browser'
 import { traceActions } from './trace_actions'
 import { normalizeConfig } from './normalize_config'
+import { getLauncherOptions } from './get_launcher_options'
 import { createContext, createFakeContext } from './create_context'
-import type {
-  LaunchOptions,
-  BrowserContext,
-  Browser as PlayWrightBrowser,
-} from '../../modules/playwright'
+import type { BrowserContext, Browser as PlayWrightBrowser } from '../../modules/playwright'
 
 /**
  * Extending types
@@ -52,8 +49,18 @@ declare module '@japa/runner' {
  */
 export function browserClient(config: PluginConfig) {
   const clientPlugin: PluginFn = function (runnerConfig, runner, { TestContext }) {
-    TestContext.macro('visit', function (...args: Parameters<BrowserContext['visit']>) {
-      return this.browserContext.visit(...args)
+    /**
+     * Since the macro will be destructured, we want to set the
+     * value and update the scope to the current instance of
+     * context
+     */
+    TestContext.created((context) => {
+      context.visit = function (
+        this: TestContextClass,
+        ...args: Parameters<BrowserContext['visit']>
+      ) {
+        return this.browserContext.visit(...args)
+      }.bind(context)
     })
 
     /**
@@ -64,11 +71,7 @@ export function browserClient(config: PluginConfig) {
     /**
      * Normalizing launch options
      */
-    const launcherOptions: LaunchOptions = {
-      headless: !!runnerConfig.cliArgs.headless,
-      slowMo: Number(runnerConfig.cliArgs.slow) || undefined,
-      devtools: !!runnerConfig.cliArgs.devtools,
-    }
+    const launcherOptions = getLauncherOptions(runnerConfig)
 
     /**
      * Hooking into a suite to launch the browser and context
