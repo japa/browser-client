@@ -40,7 +40,7 @@ declare module '../../modules/playwright' {
 /**
  * Decorates the context with the visit method.
  */
-export const addVisitMethod: Decorator = {
+export const addVisitMethod = {
   context(context) {
     context.visit = async function <PageModel extends typeof BasePage>(
       UrlOrPage: string | PageModel,
@@ -53,7 +53,7 @@ export const addVisitMethod: Decorator = {
        * and return value
        */
       if (typeof UrlOrPage === 'string') {
-        await page.goto(UrlOrPage, typeof callbackOrOptions !== 'function' ? callbackOrOptions : {})
+        await page.goto(UrlOrPage, callbackOrOptions as VisitOptions)
         return page
       }
 
@@ -81,4 +81,4 @@ export const addVisitMethod: Decorator = {
       return pageInstance as InstanceType<PageModel>
     }
   },
-}
+} satisfies Decorator

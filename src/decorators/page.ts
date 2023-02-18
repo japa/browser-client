@@ -30,7 +30,7 @@ declare module '../../modules/playwright' {
  * Decorates the page object with "pauseIf" and "pauseUnless"
  * methods.
  */
-export const addPauseMethods: Decorator = {
+export const addPauseMethods = {
   page(page) {
     page.pauseIf = async function (condition) {
       if (condition) {
@@ -44,4 +44,4 @@ export const addPauseMethods: Decorator = {
       }
     }
   },
-}
+} satisfies Decorator

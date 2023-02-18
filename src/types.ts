@@ -9,10 +9,12 @@
 
 import {
   Page,
+  devices,
   Browser,
   Response,
   BrowserContext,
   BrowserContextOptions,
+  LaunchOptions,
 } from '../modules/playwright'
 
 /**
@@ -57,7 +59,7 @@ export type PluginConfig = {
   /**
    * Lazily launch a browser.
    */
-  laucher: () => Promise<Browser>
+  launcher?: (config: Pick<LaunchOptions, 'headless' | 'slowMo' | 'devtools'>) => Promise<Browser>
 
   /**
    * An optional array of suites that will be interacting

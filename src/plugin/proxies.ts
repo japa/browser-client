@@ -14,9 +14,11 @@
 export class BrowserProxy {
   constructor(suite: string) {
     return new Proxy(this, {
-      get(property) {
+      get(_, property) {
         throw new Error(
-          `Cannot access "browser.${property}". The browser is not configured to run in "${suite}" name`
+          `Cannot access "browser.${String(
+            property
+          )}". The browser is not configured to run for "${suite}" tests`
         )
       },
     })
@@ -30,9 +32,11 @@ export class BrowserProxy {
 export class BrowserContextProxy {
   constructor(suite: string) {
     return new Proxy(this, {
-      get(property) {
+      get(_, property) {
         throw new Error(
-          `Cannot access "browserContext.${property}". The browser is not configured to run in "${suite}" name`
+          `Cannot access "browserContext.${String(
+            property
+          )}". The browser is not configured to run for "${suite}" tests`
         )
       },
     })

@@ -12,10 +12,13 @@ import { PluginFn, Suite } from '@japa/runner'
 import type { PluginConfig } from '../types'
 import { decorateBrowser } from '../browser'
 import { traceActions } from './trace_actions'
-import { addPauseMethods } from '../decorators/page'
-import { addVisitMethod } from '../decorators/context'
+import { normalizeConfig } from './normalize_config'
 import { createContext, createFakeContext } from './create_context'
-import type { Browser as PlayWrightBrowser, BrowserContext } from '../../modules/playwright'
+import type {
+  LaunchOptions,
+  BrowserContext,
+  Browser as PlayWrightBrowser,
+} from '../../modules/playwright'
 
 /**
  * Extending types
@@ -40,22 +43,29 @@ declare module '@japa/runner' {
 }
 
 /**
- * Decorators bundled by default
- */
-const BUNDLED_DECORATORS = [addVisitMethod, addPauseMethods]
-
-/**
  * Browser client plugin configures the lifecycle hooks to run
  * create playwright browser instances and browser context
  * when running a test or a suite.
  */
 export function browserClient(config: PluginConfig) {
-  const decorators = (config.decorators || []).concat(BUNDLED_DECORATORS)
-
-  const clientPlugin: PluginFn = function (_, runner, { TestContext }) {
+  const clientPlugin: PluginFn = function (runnerConfig, runner, { TestContext }) {
     TestContext.macro('visit', function (...args: Parameters<BrowserContext['visit']>) {
       return this.browserContext.visit(...args)
     })
+
+    /**
+     * Normalizing config
+     */
+    const normalizedConfig = normalizeConfig(runnerConfig, config)
+
+    /**
+     * Normalizing launch options
+     */
+    const launcherOptions: LaunchOptions = {
+      headless: !!runnerConfig.cliArgs.headless,
+      slowMo: Number(runnerConfig.cliArgs.slow) || undefined,
+      devtools: !!runnerConfig.cliArgs.devtools,
+    }
 
     /**
      * Hooking into a suite to launch the browser and context
@@ -70,7 +80,10 @@ export function browserClient(config: PluginConfig) {
        */
       if (initiateBrowser) {
         suite.setup(async () => {
-          browser = decorateBrowser(await config.laucher(), decorators)
+          browser = decorateBrowser(
+            await normalizedConfig.launcher(launcherOptions),
+            normalizedConfig.decorators
+          )
           return () => browser.close()
         })
       }
