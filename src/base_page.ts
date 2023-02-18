@@ -17,5 +17,5 @@ import type { Page, BrowserContext } from '../modules/playwright'
 export class BasePage {
   declare url: string
   declare visitOptions: VisitOptions
-  constructor(public parent: Page, public context: BrowserContext) {}
+  constructor(public page: Page, public context: BrowserContext) {}
 }

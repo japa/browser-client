@@ -68,7 +68,7 @@ test.group('Visit', () => {
       url = server.url
 
       async assertBody() {
-        assert.equal(await this.parent.locator('body').innerText(), 'hello world')
+        assert.equal(await this.page.locator('body').innerText(), 'hello world')
       }
     }
 
@@ -95,7 +95,7 @@ test.group('Visit', () => {
       visitOptions = { referer: 'http://foo.com' }
 
       async assertBody() {
-        assert.equal(await this.parent.locator('body').innerText(), 'http://foo.com/')
+        assert.equal(await this.page.locator('body').innerText(), 'http://foo.com/')
       }
     }
 
@@ -121,7 +121,7 @@ test.group('Visit', () => {
       url = server.url
 
       async assertBody() {
-        assert.equal(await this.parent.locator('body').innerText(), 'hello world')
+        assert.equal(await this.page.locator('body').innerText(), 'hello world')
       }
     }
 
