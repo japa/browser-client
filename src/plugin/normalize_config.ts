@@ -9,7 +9,7 @@
 
 import type { Config } from '@japa/runner'
 
-import { PluginConfig } from '../types'
+import { Decorator, PluginConfig } from '../types'
 import { addPauseMethods } from '../decorators/page'
 import { addVisitMethod } from '../decorators/context'
 import { chromium, firefox, webkit } from '../../modules/playwright'
@@ -53,6 +53,6 @@ export function normalizeConfig(runnerConfig: Config, config: PluginConfig) {
 
         return launcher(launcherOptions)
       }),
-    decorators: BUNDLED_DECORATORS.concat(config.decorators || []),
+    decorators: ([] as Decorator[]).concat(BUNDLED_DECORATORS).concat(config.decorators || []),
   }
 }
