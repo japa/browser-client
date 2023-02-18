@@ -10,6 +10,7 @@
 import { test } from '@japa/runner'
 import { addPauseMethods } from '../../src/decorators/pause'
 import { addVisitMethod } from '../../src/decorators/visit'
+import { addAssertions } from '../../src/decorators/assertions'
 import { normalizeConfig } from '../../src/plugin/normalize_config'
 
 test.group('Nornalize config', () => {
@@ -90,6 +91,7 @@ test.group('Nornalize config', () => {
     assert.deepEqual(config.decorators, [
       addVisitMethod,
       addPauseMethods,
+      addAssertions,
       { page: customDecorator },
     ])
   })
