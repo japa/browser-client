@@ -9,7 +9,6 @@
 
 import {
   Page,
-  devices,
   Browser,
   Response,
   BrowserContext,
