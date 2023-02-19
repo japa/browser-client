@@ -23,7 +23,7 @@ configure({
     plugins: [assert(), runFailedTests()],
     reporters: [specReporter()],
     importer: (filePath) => import(filePath),
-    timeout: 0,
+    timeout: 8000,
   },
 })
 
