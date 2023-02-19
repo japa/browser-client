@@ -34,6 +34,28 @@ const DEFAULT_LAUNCHERS: Record<string, PluginConfig['launcher']> = {
  * Normalizes the user defined config
  */
 export function normalizeConfig(runnerConfig: Config, config: PluginConfig) {
+  const tracingEvent = runnerConfig.cliArgs?.trace
+  if (tracingEvent && !['onError', 'onTest'].includes(tracingEvent)) {
+    throw new Error(
+      `Invalid tracing event "${tracingEvent}". Use --trace="onTest" or --trace="onError"`
+    )
+  }
+
+  /**
+   * Enable tracing when tracing event is defined
+   */
+  if (tracingEvent) {
+    config.tracing = Object.assign(
+      config.tracing || {
+        outputDirectory: './',
+      },
+      {
+        enabled: true,
+        event: tracingEvent,
+      }
+    )
+  }
+
   return {
     ...config,
     launcher:

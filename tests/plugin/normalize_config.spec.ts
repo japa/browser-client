@@ -97,4 +97,71 @@ test.group('Nornalize config', () => {
       { page: customDecorator },
     ])
   })
+
+  test('enable tracing when --trace flag is used', async ({ assert }) => {
+    const config = normalizeConfig(
+      {
+        cliArgs: {
+          browser: 'webkit',
+          trace: 'onError',
+        },
+        files: [],
+      },
+      {}
+    )
+
+    assert.deepEqual(config.tracing, {
+      enabled: true,
+      event: 'onError',
+      outputDirectory: './',
+    })
+  })
+
+  test('overwrite inline tracing config when --trace flag is mentioned', async ({ assert }) => {
+    const config = normalizeConfig(
+      {
+        cliArgs: {
+          browser: 'webkit',
+          trace: 'onTest',
+        },
+        files: [],
+      },
+      {
+        tracing: {
+          enabled: false,
+          event: 'onError',
+          outputDirectory: './foo',
+        },
+      }
+    )
+
+    assert.deepEqual(config.tracing, {
+      enabled: true,
+      event: 'onTest',
+      outputDirectory: './foo',
+    })
+  })
+
+  test('throw error when tracing event is invalid', async ({ assert }) => {
+    assert.throws(
+      () =>
+        normalizeConfig(
+          {
+            cliArgs: {
+              browser: 'webkit',
+              trace: 'yes',
+            },
+            files: [],
+          },
+          {
+            tracing: {
+              enabled: false,
+              event: 'onError',
+              outputDirectory: './foo',
+            },
+          }
+        ),
+      'Invalid tracing event "yes". Use --trace="onTest" or --trace="onError"'
+    )
+  })
 })
