@@ -24,6 +24,7 @@ configure({
     reporters: [specReporter()],
     importer: (filePath) => import(filePath),
     timeout: 8000,
+    forceExit: true,
   },
 })
 
