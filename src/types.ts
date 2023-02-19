@@ -43,6 +43,7 @@ export type PluginConfig = {
   tracing?: {
     enabled: boolean
     event: 'onError' | 'onTest'
+    outputDirectory: string
   }
 
   /**
