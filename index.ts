@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import './src/plugin/extensions'
+import './src/extended_types'
 
 export * from './src/types'
 export { BasePage } from './src/base_page'

@@ -8,9 +8,9 @@
  */
 
 import type { Assert } from '@japa/assert'
-import type { BasePage } from '../base_page'
-import type { VisitOptions } from '../types'
-import { BaseInteraction } from '../base_interaction'
+import type { BasePage } from './base_page'
+import type { VisitOptions } from './types'
+import { BaseInteraction } from './base_interaction'
 
 /**
  * Types for custom methods
