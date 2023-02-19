@@ -48,6 +48,7 @@ export function normalizeConfig(runnerConfig: Config, config: PluginConfig) {
     config.tracing = Object.assign(
       config.tracing || {
         outputDirectory: './',
+        cleanOutputDirectory: true,
       },
       {
         enabled: true,

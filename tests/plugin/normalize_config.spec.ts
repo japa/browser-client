@@ -113,6 +113,7 @@ test.group('Nornalize config', () => {
     assert.deepEqual(config.tracing, {
       enabled: true,
       event: 'onError',
+      cleanOutputDirectory: true,
       outputDirectory: './',
     })
   })
@@ -130,6 +131,7 @@ test.group('Nornalize config', () => {
         tracing: {
           enabled: false,
           event: 'onError',
+          cleanOutputDirectory: true,
           outputDirectory: './foo',
         },
       }
@@ -157,6 +159,7 @@ test.group('Nornalize config', () => {
             tracing: {
               enabled: false,
               event: 'onError',
+              cleanOutputDirectory: true,
               outputDirectory: './foo',
             },
           }

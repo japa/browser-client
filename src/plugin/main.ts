@@ -7,6 +7,7 @@
  * file that was distributed with this source code.
  */
 
+import fs from 'fs-extra'
 import type { BrowserContext, Browser as PlayWrightBrowser } from 'playwright'
 import { PluginFn, Suite, type TestContext as TestContextClass } from '@japa/runner'
 
@@ -82,6 +83,15 @@ export function browserClient(config: PluginConfig) {
        * after all tests of the suite are done.
        */
       if (initiateBrowser) {
+        const tracing = normalizedConfig.tracing
+
+        /**
+         * Clean output directory before running suite tests
+         */
+        if (tracing && tracing.cleanOutputDirectory && tracing.outputDirectory) {
+          suite.setup(() => fs.remove(tracing.outputDirectory!))
+        }
+
         suite.setup(async () => {
           browser = decorateBrowser(
             await normalizedConfig.launcher(launcherOptions),

@@ -45,6 +45,7 @@
     "@swc/core": "^1.3.35",
     "@types/cookie": "^0.5.1",
     "@types/cuid": "^2.0.1",
+    "@types/fs-extra": "^11.0.1",
     "@types/node": "^18.14.0",
     "@types/qs": "^6.9.7",
     "@types/sinon": "^10.0.13",
@@ -65,9 +66,9 @@
     "typescript": "^4.7.3"
   },
   "peerDependencies": {
-    "playwright": "^1.30.0",
     "@japa/assert": "^1.4.1",
-    "@japa/runner": "^2.5.0"
+    "@japa/runner": "^2.5.0",
+    "playwright": "^1.30.0"
   },
   "eslintConfig": {
     "extends": [
@@ -106,6 +107,7 @@
   },
   "dependencies": {
     "@sindresorhus/slugify": "^1.1.0",
+    "fs-extra": "^11.1.0",
     "qs": "^6.11.0"
   },
   "c8": {
