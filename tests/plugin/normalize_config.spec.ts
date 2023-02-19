@@ -138,6 +138,7 @@ test.group('Nornalize config', () => {
     )
 
     assert.deepEqual(config.tracing, {
+      cleanOutputDirectory: true,
       enabled: true,
       event: 'onTest',
       outputDirectory: './foo',
