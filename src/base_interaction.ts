@@ -56,6 +56,6 @@ export class BaseInteraction implements Promise<void> {
   }
 
   get [Symbol.toStringTag]() {
-    return '[Promise: BaseInteraction]'
+    return 'Promise'
   }
 }

@@ -436,6 +436,7 @@ export const addAssertions = {
 
     page.assertSelectedOptions = async function (selector, expectedValues) {
       const element = await this.$eval(selector, (node) => {
+        /* c8 ignore start */
         if (node.nodeName === 'SELECT') {
           const options = new Array(...node.options)
           return {
@@ -445,6 +446,7 @@ export const addAssertions = {
               .map((option: any) => option.value),
           }
         }
+        /* c8 ignore end */
       })
 
       /**
