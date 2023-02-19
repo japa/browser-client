@@ -10,23 +10,6 @@
 import type { Decorator } from '../types'
 
 /**
- * Types for custom methods
- */
-declare module 'playwright' {
-  export interface Page {
-    /**
-     * Pause page when condition is true
-     */
-    pauseIf(condition: boolean): Promise<void>
-
-    /**
-     * Pause page when condition is false
-     */
-    pauseUnless(condition: boolean): Promise<void>
-  }
-}
-
-/**
  * Decorates the page object with "pauseIf" and "pauseUnless"
  * methods.
  */

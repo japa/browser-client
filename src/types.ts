@@ -7,13 +7,13 @@
  * file that was distributed with this source code.
  */
 
-import {
+import type {
   Page,
   Browser,
   Response,
   BrowserContext,
-  BrowserContextOptions,
   LaunchOptions,
+  BrowserContextOptions,
 } from 'playwright'
 
 /**

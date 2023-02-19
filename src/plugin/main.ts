@@ -10,10 +10,6 @@
 import type { BrowserContext, Browser as PlayWrightBrowser } from 'playwright'
 import { PluginFn, Suite, type TestContext as TestContextClass } from '@japa/runner'
 
-import '../decorators/pause'
-import '../decorators/visit'
-import '../decorators/assertions'
-
 import type { PluginConfig } from '../types'
 import { decorateBrowser } from '../browser'
 import { traceActions } from './trace_actions'

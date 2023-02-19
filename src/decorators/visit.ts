@@ -12,32 +12,6 @@ import type { BasePage } from '../base_page'
 import type { Decorator, VisitOptions } from '../types'
 
 /**
- * Types for custom methods
- */
-declare module 'playwright' {
-  export interface BrowserContext {
-    /**
-     * Open a new page and visit a URL
-     */
-    visit(url: string, options?: VisitOptions): Promise<Page>
-
-    /**
-     * Open a new page using a page model
-     */
-    visit<PageModel extends typeof BasePage>(page: PageModel): Promise<InstanceType<PageModel>>
-
-    /**
-     * Open a new page using a page model and access it's
-     * instance inside the callback.
-     */
-    visit<PageModel extends typeof BasePage>(
-      page: PageModel,
-      callback: (page: InstanceType<PageModel>) => void | Promise<void>
-    ): Promise<void>
-  }
-}
-
-/**
  * Decorates the context with the visit method.
  */
 export const addVisitMethod = {

@@ -92,6 +92,101 @@ test.group('Assertions', () => {
     )
   })
 
+  test('assert element to not exist', async ({ assert, cleanup }) => {
+    const server = new ServerFactory()
+    await server.create((_, res) => {
+      res.setHeader('content-type', 'text/html')
+      res.write(`<html>
+        <head>
+          <title> Hello world </title>
+        </head>
+        <body>
+         <h1 style="display: none"> Title </h1>
+        </body>
+      </html>`)
+      res.end()
+    })
+
+    const browser = await chromium.launch()
+    cleanup(async () => {
+      await server.close()
+      await browser.close()
+    })
+
+    const page = await browser.newPage()
+    page.assert = assert
+    addAssertions.page(page)
+
+    await page.goto(server.url)
+    await page.assertNotExists('p')
+    await page.assertNotExists('span')
+    await assert.rejects(() => page.assertNotExists('h1'), `expected 'h1' element to not exist`)
+  })
+
+  test('assert element to be visible', async ({ assert, cleanup }) => {
+    const server = new ServerFactory()
+    await server.create((_, res) => {
+      res.setHeader('content-type', 'text/html')
+      res.write(`<html>
+        <head>
+          <title> Hello world </title>
+        </head>
+        <body>
+         <p> Hello world </p>
+         <h1 style="display: none"> Title </h1>
+        </body>
+      </html>`)
+      res.end()
+    })
+
+    const browser = await chromium.launch()
+    cleanup(async () => {
+      await server.close()
+      await browser.close()
+    })
+
+    const page = await browser.newPage()
+    page.assert = assert
+    addAssertions.page(page)
+
+    await page.goto(server.url)
+    await page.assertVisible('p')
+    await assert.rejects(() => page.assertVisible('h1'), `expected 'h1' element to be visible`)
+    await assert.rejects(() => page.assertVisible('span'), `expected 'span' element to be visible`)
+  })
+
+  test('assert element to be not visible', async ({ assert, cleanup }) => {
+    const server = new ServerFactory()
+    await server.create((_, res) => {
+      res.setHeader('content-type', 'text/html')
+      res.write(`<html>
+        <head>
+          <title> Hello world </title>
+        </head>
+        <body>
+         <p> Hello world </p>
+         <h1 style="display: none"> Title </h1>
+        </body>
+      </html>`)
+      res.end()
+    })
+
+    const browser = await chromium.launch()
+    cleanup(async () => {
+      await server.close()
+      await browser.close()
+    })
+
+    const page = await browser.newPage()
+    page.assert = assert
+    addAssertions.page(page)
+
+    await page.goto(server.url)
+    await page.assertNotVisible('h1')
+    await page.assertNotVisible('span')
+    await assert.rejects(() => page.assertNotVisible('p'), `expected 'p' element to be not visible`)
+  })
+
   test('assert page title', async ({ assert, cleanup }) => {
     assert.plan(1)
 
@@ -212,6 +307,65 @@ test.group('Assertions', () => {
     await page.assertUrl(`${server.url}/foo/bar?sort=id`)
   })
 
+  test('assert page URL to include a substring', async ({ assert, cleanup }) => {
+    assert.plan(1)
+
+    const server = new ServerFactory()
+    await server.create((_, res) => {
+      res.setHeader('content-type', 'text/html')
+      res.write(`<html>
+        <head>
+          <title> Hello world </title>
+        </head>
+        <body>
+        </body>
+      </html>`)
+      res.end()
+    })
+
+    const browser = await chromium.launch()
+    cleanup(async () => {
+      await server.close()
+      await browser.close()
+    })
+
+    const page = await browser.newPage()
+    page.assert = assert
+    addAssertions.page(page)
+
+    await page.goto(`${server.url}/foo/bar?sort=id`)
+    await page.assertUrlContains(`${server.url}/foo/bar`)
+  })
+
+  test('assert page URL to match regex', async ({ assert, cleanup }) => {
+    const server = new ServerFactory()
+    await server.create((_, res) => {
+      res.setHeader('content-type', 'text/html')
+      res.write(`<html>
+        <head>
+          <title> Hello world </title>
+        </head>
+        <body>
+        </body>
+      </html>`)
+      res.end()
+    })
+
+    const browser = await chromium.launch()
+    cleanup(async () => {
+      await server.close()
+      await browser.close()
+    })
+
+    const page = await browser.newPage()
+    page.assert = assert
+    addAssertions.page(page)
+
+    await page.goto(`${server.url}/foo/bar?sort=id`)
+    await page.assertUrlMatches(/foo/)
+    await assert.rejects(() => page.assertUrlMatches(/baz/), 'expected page URL to match /baz/')
+  })
+
   test('assert page path', async ({ assert, cleanup }) => {
     assert.plan(1)
 
@@ -240,6 +394,66 @@ test.group('Assertions', () => {
 
     await page.goto(`${server.url}/foo/bar`)
     await page.assertPath('/foo/bar')
+  })
+
+  test('assert page path to contain a substring', async ({ assert, cleanup }) => {
+    assert.plan(1)
+
+    const server = new ServerFactory()
+    await server.create((_, res) => {
+      res.setHeader('content-type', 'text/html')
+      res.write(`<html>
+        <head>
+          <title> Hello world </title>
+        </head>
+        <body>
+        </body>
+      </html>`)
+      res.end()
+    })
+
+    const browser = await chromium.launch()
+    cleanup(async () => {
+      await server.close()
+      await browser.close()
+    })
+
+    const page = await browser.newPage()
+    page.assert = assert
+    addAssertions.page(page)
+
+    await page.goto(`${server.url}/foo/bar`)
+    await page.assertPathContains('foo')
+  })
+
+  test('assert page path to match regex', async ({ assert, cleanup }) => {
+    assert.plan(1)
+
+    const server = new ServerFactory()
+    await server.create((_, res) => {
+      res.setHeader('content-type', 'text/html')
+      res.write(`<html>
+        <head>
+          <title> Hello world </title>
+        </head>
+        <body>
+        </body>
+      </html>`)
+      res.end()
+    })
+
+    const browser = await chromium.launch()
+    cleanup(async () => {
+      await server.close()
+      await browser.close()
+    })
+
+    const page = await browser.newPage()
+    page.assert = assert
+    addAssertions.page(page)
+
+    await page.goto(`${server.url}/foo/bar`)
+    await page.assertPathMatches(/foo/)
   })
 
   test('assert page path with query string', async ({ assert, cleanup }) => {
@@ -588,6 +802,209 @@ test.group('Assertions', () => {
     await assert.rejects(
       () => page.assertNotChecked('input[name="foo"]'),
       `expected 'input[name="foo"]' to be a checkbox`
+    )
+  })
+
+  test('assert element is disabled', async ({ assert, cleanup }) => {
+    const server = new ServerFactory()
+    await server.create((req, res) => {
+      if (req.url === '/set_cookie') {
+        res.setHeader('set-cookie', 'cart_items=3')
+      }
+
+      res.setHeader('content-type', 'text/html')
+      res.write(`<html>
+        <head>
+          <title> Hello world </title>
+        </head>
+        <body>
+          <div>
+            <input type="checkbox" name="terms" disabled="true" /> Terms and conditions
+            <input type="checkbox" name="newsletter" /> Subscribe to newsletter
+            <div id="foo"></div>
+          </div>
+        </body>
+      </html>`)
+      res.end()
+    })
+
+    const browser = await chromium.launch()
+    cleanup(async () => {
+      await server.close()
+      await browser.close()
+    })
+
+    const page = await browser.newPage()
+    page.assert = assert
+    addAssertions.page(page)
+
+    await page.goto(server.url)
+
+    await page.assertDisabled('input[name="terms"]')
+    await assert.rejects(
+      () => page.assertDisabled('input[name="newsletter"]'),
+      `expected 'input[name="newsletter"]' element to be disabled`
+    )
+    await assert.rejects(
+      () => page.assertDisabled('#foo'),
+      `expected '#foo' element to be disabled`
+    )
+  })
+
+  test('assert element is not disabled', async ({ assert, cleanup }) => {
+    const server = new ServerFactory()
+    await server.create((req, res) => {
+      if (req.url === '/set_cookie') {
+        res.setHeader('set-cookie', 'cart_items=3')
+      }
+
+      res.setHeader('content-type', 'text/html')
+      res.write(`<html>
+        <head>
+          <title> Hello world </title>
+        </head>
+        <body>
+          <div>
+            <input type="checkbox" name="terms" disabled="true" /> Terms and conditions
+            <input type="checkbox" name="newsletter" /> Subscribe to newsletter
+            <div id="foo"></div>
+          </div>
+        </body>
+      </html>`)
+      res.end()
+    })
+
+    const browser = await chromium.launch()
+    cleanup(async () => {
+      await server.close()
+      await browser.close()
+    })
+
+    const page = await browser.newPage()
+    page.assert = assert
+    addAssertions.page(page)
+
+    await page.goto(server.url)
+
+    await page.assertNotDisabled('input[name="newsletter"]')
+    await page.assertNotDisabled('#foo')
+    await assert.rejects(
+      () => page.assertNotDisabled('input[name="terms"]'),
+      `expected 'input[name="terms"]' element to be not disabled`
+    )
+  })
+
+  test('assert input value', async ({ assert, cleanup }) => {
+    const server = new ServerFactory()
+    await server.create((req, res) => {
+      if (req.url === '/set_cookie') {
+        res.setHeader('set-cookie', 'cart_items=3')
+      }
+
+      res.setHeader('content-type', 'text/html')
+      res.write(`<html>
+        <head>
+          <title> Hello world </title>
+        </head>
+        <body>
+          <div>
+            <input type="text" name="fullname" />
+            <input type="number" name="age" />
+            <select name="country">
+              <option value="IND"> India </option>
+              <option value="FR"> France </option>
+              <option value="USA"> United states </option>
+            </select>
+            <div id="foo"></div>
+          </div>
+        </body>
+      </html>`)
+      res.end()
+    })
+
+    const browser = await chromium.launch()
+    cleanup(async () => {
+      await server.close()
+      await browser.close()
+    })
+
+    const page = await browser.newPage()
+    page.assert = assert
+    addAssertions.page(page)
+
+    await page.goto(server.url)
+
+    await page.fill('input[name="fullname"]', 'virk')
+    await page.assertInputValue('input[name="fullname"]', 'virk')
+
+    await page.selectOption('select[name="country"]', 'IND')
+    await page.assertInputValue('select[name="country"]', 'IND')
+
+    await page.fill('input[name="age"]', '32')
+    await page.assertInputValue('input[name="age"]', '32')
+
+    await assert.rejects(
+      () => page.assertInputValue('#foo', 'IND'),
+      `expected '#foo' element to be an input, select or a textarea`
+    )
+  })
+
+  test('assert select options', async ({ assert, cleanup }) => {
+    const server = new ServerFactory()
+    await server.create((req, res) => {
+      if (req.url === '/set_cookie') {
+        res.setHeader('set-cookie', 'cart_items=3')
+      }
+
+      res.setHeader('content-type', 'text/html')
+      res.write(`<html>
+        <head>
+          <title> Hello world </title>
+        </head>
+        <body>
+          <div>
+            <select name="country">
+              <option value="IND"> India </option>
+              <option value="FR"> France </option>
+              <option value="USA"> United states </option>
+            </select>
+
+            <select name="tags" multiple>
+              <option value="node_js"> Node.js </option>
+              <option value="js"> JavaScript </option>
+              <option value="php"> PHP </option>
+              <option value="css"> CSS </option>
+              <option value="html"> HTML </option>
+            </select>
+
+            <div id="foo"></div>
+          </div>
+        </body>
+      </html>`)
+      res.end()
+    })
+
+    const browser = await chromium.launch()
+    cleanup(async () => {
+      await server.close()
+      await browser.close()
+    })
+
+    const page = await browser.newPage()
+    page.assert = assert
+    addAssertions.page(page)
+
+    await page.goto(server.url)
+
+    await page.selectOption('select[name="country"]', 'IND')
+    await page.assertSelectedOptions('select[name="country"]', ['IND'])
+
+    await page.selectOption('select[name="tags"]', ['js', 'css'])
+    await page.assertSelectedOptions('select[name="tags"]', ['css', 'js'])
+
+    await assert.rejects(
+      () => page.assertSelectedOptions('#foo', []),
+      `expected '#foo' element to be a select box`
     )
   })
 })
