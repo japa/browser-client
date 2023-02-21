@@ -53,11 +53,6 @@ export type PluginConfig = {
   contextOptions?: BrowserContextOptions
 
   /**
-   * Custom decorators to apply
-   */
-  decorators?: Decorator[]
-
-  /**
    * Lazily launch a browser.
    */
   launcher?: (config: Pick<LaunchOptions, 'headless' | 'slowMo' | 'devtools'>) => Promise<Browser>

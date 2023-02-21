@@ -16,6 +16,7 @@ import { decorateBrowser } from '../browser'
 import { traceActions } from './trace_actions'
 import { normalizeConfig } from './normalize_config'
 import { getLauncherOptions } from './get_launcher_options'
+import decoratorsCollection from '../decorators_collection'
 import { createContext, createFakeContext } from './create_context'
 
 /**
@@ -95,7 +96,7 @@ export function browserClient(config: PluginConfig) {
         suite.setup(async () => {
           browser = decorateBrowser(
             await normalizedConfig.launcher(launcherOptions),
-            normalizedConfig.decorators
+            decoratorsCollection.toJSON()
           )
           return () => browser.close()
         })

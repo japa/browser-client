@@ -8,10 +8,6 @@
  */
 
 import { test } from '@japa/runner'
-import { addUseMethod } from '../../src/decorators/use'
-import { addVisitMethod } from '../../src/decorators/visit'
-import { addPauseMethods } from '../../src/decorators/pause'
-import { addAssertions } from '../../src/decorators/assertions'
 import { normalizeConfig } from '../../src/plugin/normalize_config'
 
 test.group('Nornalize config', () => {
@@ -72,30 +68,6 @@ test.group('Nornalize config', () => {
         ).launcher({}),
       'Invalid browser "chrome". Allowed values are chromium, firefox, webkit'
     )
-  })
-
-  test('merge bundled decorator with user defined decorators', async ({ assert }) => {
-    function customDecorator() {}
-    const config = normalizeConfig(
-      {
-        files: [],
-      },
-      {
-        decorators: [
-          {
-            page: customDecorator,
-          },
-        ],
-      }
-    )
-
-    assert.deepEqual(config.decorators, [
-      addVisitMethod,
-      addPauseMethods,
-      addUseMethod,
-      addAssertions,
-      { page: customDecorator },
-    ])
   })
 
   test('enable tracing when --trace flag is used', async ({ assert }) => {
