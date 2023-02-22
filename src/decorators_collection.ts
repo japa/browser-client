@@ -18,16 +18,17 @@ import { addAssertions } from './decorators/assertions'
  * extending playwright
  */
 class DecoratorsCollection {
-  #list: Decorator[] = [addAssertions, addPauseMethods, addUseMethod, addVisitMethod]
+  private list: Decorator[] = [addAssertions, addPauseMethods, addUseMethod, addVisitMethod]
 
   register(decorator: Decorator): this {
-    this.#list.push(decorator)
+    this.list.push(decorator)
     return this
   }
 
   toJSON() {
-    return this.#list
+    return this.list
   }
 }
 
-export default new DecoratorsCollection()
+const decoratorsCollection = new DecoratorsCollection()
+export { decoratorsCollection }
