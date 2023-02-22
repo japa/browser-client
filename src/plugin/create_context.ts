@@ -10,6 +10,7 @@
 import type { Test } from '@japa/runner'
 import type { Browser as PlayWrightBrowser } from 'playwright'
 
+import debug from '../debug'
 import type { PluginConfig } from '../types'
 import { BrowserContextProxy, BrowserProxy } from './proxies'
 
@@ -21,6 +22,7 @@ export async function createContext(
   config: PluginConfig,
   { context }: Test
 ) {
+  debug('creating browser context for test "%s"', context.test.title)
   const host = process.env.HOST
   const port = process.env.PORT
 
@@ -41,7 +43,10 @@ export async function createContext(
     page.assert = context.assert
   })
 
-  return () => context.browserContext.close()
+  return () => {
+    debug('closing browser context for test "%s"', context.test.title)
+    return context.browserContext.close()
+  }
 }
 
 /**

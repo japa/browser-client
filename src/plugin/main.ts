@@ -11,6 +11,7 @@ import fs from 'fs-extra'
 import type { BrowserContext, Browser as PlayWrightBrowser } from 'playwright'
 import { PluginFn, Suite, type TestContext as TestContextClass } from '@japa/runner'
 
+import debug from '../debug'
 import type { PluginConfig } from '../types'
 import { decorateBrowser } from '../browser'
 import { traceActions } from './trace_actions'
@@ -94,11 +95,16 @@ export function browserClient(config: PluginConfig) {
         }
 
         suite.setup(async () => {
+          debug('initiating browser for suite "%s"', suite.name)
           browser = decorateBrowser(
             await normalizedConfig.launcher(launcherOptions),
             decoratorsCollection.toJSON()
           )
-          return () => browser.close()
+
+          return () => {
+            debug('closing browser for suite "%s"', suite.name)
+            return browser.close()
+          }
         })
       }
 

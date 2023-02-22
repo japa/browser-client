@@ -15,7 +15,7 @@
   "type": "commonjs",
   "scripts": {
     "pretest": "npm run lint",
-    "test": "c8 npm run vscode:test",
+    "test": "cross-env NODE_DEBUG=japa:browser-client c8 npm run vscode:test",
     "clean": "del-cli build",
     "compile": "npm run lint && npm run clean && tsc",
     "build": "npm run compile",
@@ -51,10 +51,11 @@
     "@types/sinon": "^10.0.13",
     "c8": "^7.13.0",
     "cookie": "^0.5.0",
+    "cross-env": "^7.0.3",
     "del-cli": "^5.0.0",
     "eslint": "^8.34.0",
     "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-adonis": "^3.0.2",
+    "eslint-plugin-adonis": "^3.0.3",
     "eslint-plugin-prettier": "^4.0.0",
     "github-label-sync": "^2.2.0",
     "husky": "^8.0.1",
@@ -79,6 +80,7 @@
       "prettier"
     ],
     "rules": {
+      "unicorn/prefer-node-protocol": "off",
       "prettier/prettier": [
         "error",
         {

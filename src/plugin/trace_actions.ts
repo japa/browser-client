@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { join } from 'node:path'
+import { join } from 'path'
 import type { Test } from '@japa/runner'
 import slugify from '@sindresorhus/slugify'
 
