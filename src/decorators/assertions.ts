@@ -8,7 +8,15 @@
  */
 
 import qs from 'qs'
+import type { Locator, Page } from 'playwright'
 import type { Decorator } from '../types'
+
+/**
+ * Returns locator for a selector
+ */
+function getLocator(selector: string | Locator, page: Page): Locator {
+  return typeof selector === 'string' ? page.locator(selector) : selector
+}
 
 /**
  * Decorates the page object with custom assertions
@@ -16,7 +24,7 @@ import type { Decorator } from '../types'
 export const addAssertions = {
   page(page) {
     page.assertExists = async function (selector) {
-      const matchingCount = await this.locator(selector).count()
+      const matchingCount = await getLocator(selector, this).count()
 
       this.assert.incrementAssertionsCount()
       this.assert.evaluate(matchingCount > 0, 'expected #{this} element to exist', {
@@ -29,7 +37,7 @@ export const addAssertions = {
     }
 
     page.assertNotExists = async function (selector) {
-      const matchingCount = await this.locator(selector).count()
+      const matchingCount = await getLocator(selector, this).count()
 
       this.assert.incrementAssertionsCount()
       this.assert.evaluate(matchingCount === 0, 'expected #{this} element to not exist', {
@@ -42,7 +50,7 @@ export const addAssertions = {
     }
 
     page.assertElementsCount = async function (selector, expectedCount) {
-      const matchingCount = await this.locator(selector).count()
+      const matchingCount = await getLocator(selector, this).count()
 
       this.assert.incrementAssertionsCount()
       this.assert.evaluate(
@@ -59,7 +67,7 @@ export const addAssertions = {
     }
 
     page.assertVisible = async function (selector) {
-      const isVisible = await this.locator(selector).isVisible()
+      const isVisible = await getLocator(selector, this).isVisible()
 
       this.assert.incrementAssertionsCount()
       this.assert.evaluate(isVisible, 'expected #{this} element to be visible', {
@@ -72,7 +80,7 @@ export const addAssertions = {
     }
 
     page.assertNotVisible = async function (selector) {
-      const isVisible = await this.locator(selector).isVisible()
+      const isVisible = await getLocator(selector, this).isVisible()
 
       this.assert.incrementAssertionsCount()
       this.assert.evaluate(!isVisible, 'expected #{this} element to be not visible', {
@@ -257,7 +265,7 @@ export const addAssertions = {
     page.assertText = async function (selector, expectedValue) {
       this.assert.incrementAssertionsCount()
 
-      const actual = await this.locator(selector).innerText({ timeout: 2000 })
+      const actual = await getLocator(selector, this).innerText({ timeout: 2000 })
       this.assert.evaluate(
         actual === expectedValue,
         'expected #{this} inner text to equal #{exp}',
@@ -272,14 +280,14 @@ export const addAssertions = {
     }
 
     page.assertElementsText = async function (selector, expectedValues) {
-      const innertTexts = await this.locator(selector).allInnerTexts()
+      const innertTexts = await getLocator(selector, this).allInnerTexts()
       this.assert.deepEqual(innertTexts, expectedValues)
     }
 
     page.assertTextContains = async function (selector, expectedSubstring) {
       this.assert.incrementAssertionsCount()
 
-      const actual = await this.locator(selector).innerText({ timeout: 2000 })
+      const actual = await getLocator(selector, this).innerText({ timeout: 2000 })
       this.assert.evaluate(
         actual.includes(expectedSubstring),
         'expected #{this} inner text to include #{exp}',
@@ -297,7 +305,7 @@ export const addAssertions = {
       let isChecked: boolean | undefined
 
       try {
-        isChecked = await this.locator(selector).isChecked({ timeout: 2000 })
+        isChecked = await getLocator(selector, this).isChecked({ timeout: 2000 })
       } catch (error) {
         if (error.message.includes('Not a checkbox')) {
           this.assert.incrementAssertionsCount()
@@ -334,7 +342,7 @@ export const addAssertions = {
       let isChecked: boolean | undefined
 
       try {
-        isChecked = await this.locator(selector).isChecked({ timeout: 2000 })
+        isChecked = await getLocator(selector, this).isChecked({ timeout: 2000 })
       } catch (error) {
         if (error.message.includes('Not a checkbox')) {
           this.assert.incrementAssertionsCount()
@@ -368,7 +376,7 @@ export const addAssertions = {
     }
 
     page.assertDisabled = async function (selector) {
-      const isDisabled = await this.locator(selector).isDisabled({ timeout: 2000 })
+      const isDisabled = await getLocator(selector, this).isDisabled({ timeout: 2000 })
 
       this.assert.incrementAssertionsCount()
       this.assert.evaluate(isDisabled, 'expected #{this} element to be disabled', {
@@ -381,7 +389,7 @@ export const addAssertions = {
     }
 
     page.assertNotDisabled = async function (selector) {
-      const isDisabled = await this.locator(selector).isDisabled({ timeout: 2000 })
+      const isDisabled = await getLocator(selector, this).isDisabled({ timeout: 2000 })
 
       this.assert.incrementAssertionsCount()
       this.assert.evaluate(!isDisabled, 'expected #{this} element to be not disabled', {
@@ -397,7 +405,7 @@ export const addAssertions = {
       let inputValue: string | undefined
 
       try {
-        inputValue = await this.locator(selector).inputValue({ timeout: 2000 })
+        inputValue = await getLocator(selector, this).inputValue({ timeout: 2000 })
       } catch (error) {
         if (error.message.includes('Node is not')) {
           this.assert.incrementAssertionsCount()

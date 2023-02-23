@@ -7,6 +7,7 @@
  * file that was distributed with this source code.
  */
 
+import type { Locator } from 'playwright'
 import type { Assert } from '@japa/assert'
 import type { BasePage } from './base_page'
 import type { VisitOptions } from './types'
@@ -37,29 +38,29 @@ declare module 'playwright' {
     /**
      * Assert an element to exists
      */
-    assertExists(selector: string): Promise<void>
+    assertExists(selector: string | Locator): Promise<void>
 
     /**
      * Assert an element to not exist
      */
-    assertNotExists(selector: string): Promise<void>
+    assertNotExists(selector: string | Locator): Promise<void>
 
     /**
      * Assert an element to exists and have matching count
      */
-    assertElementsCount(selector: string, expectedCount: number): Promise<void>
+    assertElementsCount(selector: string | Locator, expectedCount: number): Promise<void>
 
     /**
      * Assert an element to be visible. Elements with display: none
      * and visibility:hidden are not visible.
      */
-    assertVisible(selector: string): Promise<void>
+    assertVisible(selector: string | Locator): Promise<void>
 
     /**
      * Assert an element to be not visible. Elements with display: none
      * and visibility:hidden are not visible.
      */
-    assertNotVisible(selector: string): Promise<void>
+    assertNotVisible(selector: string | Locator): Promise<void>
 
     /**
      * Assert the page title to match the expected
@@ -130,50 +131,50 @@ declare module 'playwright' {
      * Assert innerText of a given selector to equal
      * the expected value
      */
-    assertText(selector: string, expectedValue: string): Promise<void>
+    assertText(selector: string | Locator, expectedValue: string): Promise<void>
 
     /**
      * Assert innerText of a given selector elements to match
      * the expected values
      */
-    assertElementsText(selector: string, expectedValues: string[]): Promise<void>
+    assertElementsText(selector: string | Locator, expectedValues: string[]): Promise<void>
 
     /**
      * Assert innerText of a given selector to include
      * substring
      */
-    assertTextContains(selector: string, expectedSubstring: string): Promise<void>
+    assertTextContains(selector: string | Locator, expectedSubstring: string): Promise<void>
 
     /**
      * Assert a checkbox to be checked
      */
-    assertChecked(selector: string): Promise<void>
+    assertChecked(selector: string | Locator): Promise<void>
 
     /**
      * Assert a checkbox not to be checked
      */
-    assertNotChecked(selector: string): Promise<void>
+    assertNotChecked(selector: string | Locator): Promise<void>
 
     /**
      * Assert an element to be disabled. All elements are considered
      * enabled, unless it is a button, select, input or a textarea
      * with disabled attribute
      */
-    assertDisabled(selector: string): Promise<void>
+    assertDisabled(selector: string | Locator): Promise<void>
 
     /**
      * Assert an element to be not disabled. All elements are considered
      * enabled, unless it is a button, select, input or a textarea
      * with disabled attribute
      */
-    assertNotDisabled(selector: string): Promise<void>
+    assertNotDisabled(selector: string | Locator): Promise<void>
 
     /**
      * Assert the input value to match the expected value. The assertion
      * must be performed against an `input`, `textarea` or a `select`
      * dropdown.
      */
-    assertInputValue(selector: string, expectedValue: string): Promise<void>
+    assertInputValue(selector: string | Locator, expectedValue: string): Promise<void>
 
     /**
      * Assert the select box selected options to match the expected values.
