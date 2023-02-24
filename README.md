@@ -1,8 +1,64 @@
 # @japa/browser-client
+> Browser client to write end to end browser tests. Uses playwright under the hood
 
-> Browser client for end to end testing
+[![github-actions-image]][github-actions-url] [![npm-image]][npm-url] [![license-image]][license-url] [![typescript-image]][typescript-url]
 
-[![gh-workflow-image]][gh-workflow-url] [![npm-image]][npm-url] ![][typescript-image] [![license-image]][license-url] [![snyk-image]][snyk-url]
+The browser client of Japa is built on top of [Playwright library](https://playwright.dev/docs/library) and integrates seamlessly with the Japa test runner. Following are some reasons to use this plugin over manually interacting with the Playwright API.
+
+- Automatic management of browsers and browser contexts.
+- Built-in assertions.
+- Ability to extend the `browser`, `context`, and `page` objects using [decorators](#decorators).
+- Class-based pages and interactions to de-compose the page under test into smaller and reusable components.
+- Toggle headless mode, tracing, and browsers using CLI flags.
+
+#### [Complete documentation](https://japa.dev/docs/plugins/browser-client)
+
+## Installation
+Install the package from the npm registry as follows:
+
+```sh
+npm i -D playwright @japa/browser-client
+
+yarn add -D playwright @japa/browser-client
+```
+
+## Usage
+You can use the browser client package with the `@japa/runner` as follows.
+
+```ts
+import { assert } from '@japa/assert'
+import { browserClient } from '@japa/browser-client'
+import { configure, processCliArgs } from '@japa/runner'
+
+configure({
+  ...processCliArgs(process.argv.slice(2)),
+  ...{
+    plugins: [
+      assert(),
+      browserClient({
+        runInSuites: ['browser']
+      })
+    ]
+  }
+})
+```
+
+Once done, you will be able to access the `visit`, `browser` and `browserContext` property from the test context.
+
+```ts
+test('test title', ({ browser, browserContext, visit }) => {
+  // Create new page
+  const page = await browserContext.newPage()
+  await page.goto(url)
+
+  // Or use visit helper
+  const page = await visit(url)
+
+  // Create multiple contexts
+  const context1 = await browser.newContext()
+  const context2 = await browser.newContext()
+})
+```
 
 [gh-workflow-image]: https://img.shields.io/github/actions/workflow/status/japa/browser-client/test.yml?style=for-the-badge
 [gh-workflow-url]: https://github.com/japa/browser-client/actions/workflows/test.yml 'Github action'
