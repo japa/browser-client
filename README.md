@@ -1,7 +1,7 @@
 # @japa/browser-client
 > Browser client to write end to end browser tests. Uses playwright under the hood
 
-[![github-actions-image]][github-actions-url] [![npm-image]][npm-url] [![license-image]][license-url] [![typescript-image]][typescript-url]
+[![gh-actions-image]][gh-actions-url] [![npm-image]][npm-url] [![license-image]][license-url] ![typescript-image]
 
 The browser client of Japa is built on top of [Playwright library](https://playwright.dev/docs/library) and integrates seamlessly with the Japa test runner. Following are some reasons to use this plugin over manually interacting with the Playwright API.
 
