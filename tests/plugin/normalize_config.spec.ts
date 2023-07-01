@@ -8,47 +8,25 @@
  */
 
 import { test } from '@japa/runner'
-import { normalizeConfig } from '../../src/plugin/normalize_config'
+import { normalizeConfig } from '../../src/plugin/normalize_config.js'
 
 test.group('Nornalize config', () => {
   test('launch chromium browser', async ({ assert, cleanup }) => {
-    const browser = await normalizeConfig(
-      {
-        cliArgs: {},
-        files: [],
-      },
-      {}
-    ).launcher({})
+    const browser = await normalizeConfig({}, {}).launcher({})
 
     cleanup(() => browser.close())
     assert.equal(browser.browserType().name(), 'chromium')
   })
 
   test('launch firefox browser', async ({ assert, cleanup }) => {
-    const browser = await normalizeConfig(
-      {
-        cliArgs: {
-          browser: 'firefox',
-        },
-        files: [],
-      },
-      {}
-    ).launcher({})
+    const browser = await normalizeConfig({ browser: 'firefox' }, {}).launcher({})
 
     cleanup(() => browser.close())
     assert.equal(browser.browserType().name(), 'firefox')
   })
 
   test('launch webkit browser', async ({ assert, cleanup }) => {
-    const browser = await normalizeConfig(
-      {
-        cliArgs: {
-          browser: 'webkit',
-        },
-        files: [],
-      },
-      {}
-    ).launcher({})
+    const browser = await normalizeConfig({ browser: 'webkit' }, {}).launcher({})
 
     cleanup(() => browser.close())
     assert.equal(browser.browserType().name(), 'webkit')
@@ -56,31 +34,13 @@ test.group('Nornalize config', () => {
 
   test('raise error when invalid browser is mentioned', async ({ assert }) => {
     await assert.rejects(
-      () =>
-        normalizeConfig(
-          {
-            cliArgs: {
-              browser: 'chrome',
-            },
-            files: [],
-          },
-          {}
-        ).launcher({}),
+      () => normalizeConfig({ browser: 'chrome' }, {}).launcher({}),
       'Invalid browser "chrome". Allowed values are chromium, firefox, webkit'
     )
   })
 
   test('enable tracing when --trace flag is used', async ({ assert }) => {
-    const config = normalizeConfig(
-      {
-        cliArgs: {
-          browser: 'webkit',
-          trace: 'onError',
-        },
-        files: [],
-      },
-      {}
-    )
+    const config = normalizeConfig({ browser: 'webkit', trace: 'onError' }, {})
 
     assert.deepEqual(config.tracing, {
       enabled: true,
@@ -92,13 +52,7 @@ test.group('Nornalize config', () => {
 
   test('overwrite inline tracing config when --trace flag is mentioned', async ({ assert }) => {
     const config = normalizeConfig(
-      {
-        cliArgs: {
-          browser: 'webkit',
-          trace: 'onTest',
-        },
-        files: [],
-      },
+      { browser: 'webkit', trace: 'onTest' },
       {
         tracing: {
           enabled: false,
@@ -121,13 +75,7 @@ test.group('Nornalize config', () => {
     assert.throws(
       () =>
         normalizeConfig(
-          {
-            cliArgs: {
-              browser: 'webkit',
-              trace: 'yes',
-            },
-            files: [],
-          },
+          { browser: 'webkit', trace: 'yes' },
           {
             tracing: {
               enabled: false,

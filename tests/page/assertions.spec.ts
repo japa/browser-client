@@ -10,8 +10,8 @@
 import { test } from '@japa/runner'
 import { chromium } from 'playwright'
 
-import { ServerFactory } from '../../factories/server'
-import { addAssertions } from '../../src/decorators/assertions'
+import { ServerFactory } from '../../factories/server.js'
+import { addAssertions } from '../../src/decorators/assertions.js'
 
 test.group('Assertions', () => {
   test('assert element to exist', async ({ assert, cleanup }) => {

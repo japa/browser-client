@@ -7,24 +7,24 @@
  * file that was distributed with this source code.
  */
 
-import { join } from 'path'
-import type { Test } from '@japa/runner'
+import { join } from 'node:path'
+import type { Test } from '@japa/runner/core'
 import slugify from '@sindresorhus/slugify'
 
-import type { PluginConfig } from '../types'
+import type { PluginConfig } from '../types.js'
 
 /**
  * Tests hook to trace actions
  */
 export async function traceActions(config: PluginConfig, test: Test) {
   if (!config.tracing?.enabled) {
-    return
+    return () => {}
   }
 
   /**
    * Trace action when tracing is enabled
    */
-  await test.context.browserContext.tracing.start({
+  await test.context!.browserContext.tracing.start({
     title: test.title,
     screenshots: true,
     snapshots: true,
@@ -38,11 +38,11 @@ export async function traceActions(config: PluginConfig, test: Test) {
   if (config.tracing.event === 'onError') {
     return async (error: any) => {
       if (error) {
-        await test.context.browserContext.tracing.stop({
+        await test.context!.browserContext.tracing.stop({
           path: join(config.tracing!.outputDirectory, `${slugify(test.title)}.zip`),
         })
       } else {
-        await test.context.browserContext.tracing.stop()
+        await test.context!.browserContext.tracing.stop()
       }
     }
   }
@@ -52,7 +52,7 @@ export async function traceActions(config: PluginConfig, test: Test) {
    * when "tracing.event === 'onTest'"
    */
   return async () => {
-    await test.context.browserContext.tracing.stop({
+    await test.context!.browserContext.tracing.stop({
       path: join(config.tracing!.outputDirectory, `${slugify(test.title)}.zip`),
     })
   }

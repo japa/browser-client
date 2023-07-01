@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import type { VisitOptions } from './types'
+import type { VisitOptions } from './types.js'
 import type { Page, BrowserContext } from 'playwright'
 
 /**

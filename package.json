@@ -1,21 +1,27 @@
 {
   "name": "@japa/browser-client",
-  "version": "1.2.0",
   "description": "Browser client built on top of Playwright for writing end to end tests",
+  "version": "1.2.0",
+  "engines": {
+    "node": ">=18.16.0"
+  },
   "main": "./build/index.js",
+  "type": "module",
   "files": [
+    "index.ts",
+    "src",
     "build/src",
-    "build/modules",
     "build/index.d.ts",
-    "build/index.js"
+    "build/index.js",
+    "build/index.d.ts.map"
   ],
   "exports": {
-    ".": "./build/index.js"
+    ".": "./build/index.js",
+    "./types": "./build/src/types.js"
   },
-  "type": "commonjs",
   "scripts": {
-    "pretest": "npm run lint",
-    "test": "cross-env NODE_DEBUG=japa:* c8 npm run vscode:test",
+    "pretest": "npm run lint && npm run typecheck",
+    "test": "cross-env NODE_DEBUG=japa:* c8 npm run quick:test",
     "clean": "del-cli build",
     "compile": "npm run lint && npm run clean && tsc",
     "build": "npm run compile",
@@ -23,94 +29,81 @@
     "version": "npm run build",
     "prepublishOnly": "npm run build",
     "lint": "eslint . --ext=.ts",
+    "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
-    "vscode:test": "node --require=ts-node/register bin/test.ts",
-    "sync-labels": "github-label-sync --labels .github/labels.json japa/browser-client"
+    "quick:test": "node --loader ts-node/esm bin/test.ts",
+    "sync-labels": "github-label-sync --labels .github/labels.json japa/file-system"
   },
-  "publishConfig": {
-    "access": "public",
-    "tag": "latest"
-  },
-  "keywords": [],
-  "author": "virk,japa",
-  "license": "MIT",
   "devDependencies": {
-    "@commitlint/cli": "^17.4.4",
-    "@commitlint/config-conventional": "^17.4.4",
-    "@japa/assert": "^1.4.1",
-    "@japa/core": "^7.3.2",
-    "@japa/run-failed-tests": "^1.0.7",
-    "@japa/runner": "^2.5.1",
-    "@japa/spec-reporter": "^1.1.12",
-    "@swc/core": "^1.3.36",
+    "@adonisjs/eslint-config": "^1.1.6",
+    "@adonisjs/prettier-config": "^1.1.6",
+    "@adonisjs/tsconfig": "^1.1.6",
+    "@commitlint/cli": "^17.6.6",
+    "@commitlint/config-conventional": "^17.6.6",
+    "@japa/assert": "^2.0.0-1",
+    "@japa/runner": "^3.0.0-1",
+    "@swc/core": "^1.3.67",
     "@types/cookie": "^0.5.1",
-    "@types/cuid": "^2.0.1",
     "@types/fs-extra": "^11.0.1",
-    "@types/node": "^18.14.0",
+    "@types/node": "^20.3.2",
     "@types/qs": "^6.9.7",
-    "@types/sinon": "^10.0.13",
-    "c8": "^7.13.0",
+    "@types/sinon": "^10.0.15",
+    "c8": "^8.0.0",
     "cookie": "^0.5.0",
     "cross-env": "^7.0.3",
     "del-cli": "^5.0.0",
-    "eslint": "^8.34.0",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-adonis": "^3.0.3",
-    "eslint-plugin-prettier": "^4.0.0",
-    "github-label-sync": "^2.2.0",
-    "husky": "^8.0.1",
-    "np": "^7.6.1",
-    "playwright": "^1.31.0",
-    "prettier": "^2.7.1",
-    "sinon": "^15.0.1",
-    "ts-node": "^10.8.1",
-    "typescript": "^4.7.3"
+    "eslint": "^8.43.0",
+    "github-label-sync": "^2.3.1",
+    "husky": "^8.0.3",
+    "np": "^8.0.4",
+    "playwright": "^1.35.1",
+    "prettier": "^2.8.8",
+    "sinon": "^15.2.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.6"
+  },
+  "dependencies": {
+    "@sindresorhus/slugify": "^2.2.1",
+    "fs-extra": "^11.1.1",
+    "qs": "^6.11.2"
   },
   "peerDependencies": {
-    "@japa/assert": "^1.4.1",
-    "@japa/runner": "^2.5.0",
+    "@japa/assert": "^2.0.0-1",
+    "@japa/runner": "^3.0.0-1",
     "playwright": "^1.30.0"
   },
+  "author": "virk,japa",
+  "license": "MIT",
+  "homepage": "https://github.com/japa/browser-client#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/japa/browser-client.git"
+  },
+  "bugs": {
+    "url": "https://github.com/japa/browser-client/issues"
+  },
+  "keywords": [],
+  "directories": {
+    "test": "tests"
+  },
   "eslintConfig": {
-    "extends": [
-      "plugin:adonis/typescriptPackage",
-      "prettier"
-    ],
-    "plugins": [
-      "prettier"
-    ],
-    "rules": {
-      "unicorn/prefer-node-protocol": "off",
-      "prettier/prettier": [
-        "error",
-        {
-          "endOfLine": "auto"
-        }
-      ]
-    }
+    "extends": "@adonisjs/eslint-config/package"
   },
-  "eslintIgnore": [
-    "build"
-  ],
-  "prettier": {
-    "trailingComma": "es5",
-    "semi": false,
-    "singleQuote": true,
-    "useTabs": false,
-    "quoteProps": "consistent",
-    "bracketSpacing": true,
-    "arrowParens": "always",
-    "printWidth": 100
-  },
+  "prettier": "@adonisjs/prettier-config",
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"
     ]
   },
-  "dependencies": {
-    "@sindresorhus/slugify": "^1.1.0",
-    "fs-extra": "^11.1.0",
-    "qs": "^6.11.0"
+  "publishConfig": {
+    "access": "public",
+    "tag": "next"
+  },
+  "np": {
+    "message": "chore(release): %s",
+    "tag": "next",
+    "branch": "main",
+    "anyBranch": false
   },
   "c8": {
     "reporter": [
@@ -120,22 +113,5 @@
     "exclude": [
       "tests/**"
     ]
-  },
-  "np": {
-    "message": "chore(release): %s",
-    "tag": "latest",
-    "branch": "main",
-    "anyBranch": false
-  },
-  "directories": {
-    "test": "tests"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/japa/browser-client.git"
-  },
-  "bugs": {
-    "url": "https://github.com/japa/browser-client/issues"
-  },
-  "homepage": "https://github.com/japa/browser-client#readme"
+  }
 }

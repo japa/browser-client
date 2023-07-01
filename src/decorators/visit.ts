@@ -8,8 +8,8 @@
  */
 
 import type { Page } from 'playwright'
-import type { BasePage } from '../base_page'
-import type { Decorator, VisitOptions } from '../types'
+import type { BasePage } from '../base_page.js'
+import type { Decorator, VisitOptions } from '../types.js'
 
 /**
  * Decorates the context with the visit method.

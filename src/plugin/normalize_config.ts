@@ -7,10 +7,10 @@
  * file that was distributed with this source code.
  */
 
-import type { Config } from '@japa/runner'
+import type { CLIArgs } from '@japa/runner/types'
 import { chromium, firefox, webkit } from 'playwright'
 
-import { PluginConfig } from '../types'
+import { PluginConfig } from '../types.js'
 
 /**
  * Default launchers that can be selected using the '--browser' flag
@@ -24,8 +24,8 @@ const DEFAULT_LAUNCHERS: Record<string, PluginConfig['launcher']> = {
 /**
  * Normalizes the user defined config
  */
-export function normalizeConfig(runnerConfig: Config, config: PluginConfig) {
-  const tracingEvent = runnerConfig.cliArgs?.trace
+export function normalizeConfig(cliArgs: CLIArgs, config: PluginConfig) {
+  const tracingEvent = cliArgs?.trace as string | undefined
   if (tracingEvent && !['onError', 'onTest'].includes(tracingEvent)) {
     throw new Error(
       `Invalid tracing event "${tracingEvent}". Use --trace="onTest" or --trace="onError"`
@@ -43,7 +43,7 @@ export function normalizeConfig(runnerConfig: Config, config: PluginConfig) {
       },
       {
         enabled: true,
-        event: tracingEvent,
+        event: tracingEvent as 'onError' | 'onTest',
       }
     )
   }
@@ -53,8 +53,8 @@ export function normalizeConfig(runnerConfig: Config, config: PluginConfig) {
     launcher:
       config.launcher ||
       (async (launcherOptions) => {
-        const browser = runnerConfig.cliArgs?.browser || 'chromium'
-        const launcher = DEFAULT_LAUNCHERS[browser]
+        const browser = cliArgs?.browser || 'chromium'
+        const launcher = DEFAULT_LAUNCHERS[browser as keyof typeof DEFAULT_LAUNCHERS]
 
         /**
          * Invalid browser specified via "--browser" flag

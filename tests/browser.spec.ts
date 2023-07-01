@@ -10,8 +10,8 @@
 import { test } from '@japa/runner'
 import { chromium } from 'playwright'
 
-import { decorateBrowser } from '../src/browser'
-import { ServerFactory } from '../factories/server'
+import { decorateBrowser } from '../src/browser.js'
+import { ServerFactory } from '../factories/server.js'
 
 test.group('Browser', () => {
   test('open page', async ({ assert, cleanup }) => {

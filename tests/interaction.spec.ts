@@ -10,12 +10,12 @@
 import { test } from '@japa/runner'
 import { chromium } from 'playwright'
 
-import { BasePage } from '../src/base_page'
-import { decorateBrowser } from '../src/browser'
-import { ServerFactory } from '../factories/server'
-import { addUseMethod } from '../src/decorators/use'
-import { addVisitMethod } from '../src/decorators/visit'
-import { BaseInteraction } from '../src/base_interaction'
+import { BasePage } from '../src/base_page.js'
+import { decorateBrowser } from '../src/browser.js'
+import { ServerFactory } from '../factories/server.js'
+import { addUseMethod } from '../src/decorators/use.js'
+import { addVisitMethod } from '../src/decorators/visit.js'
+import { BaseInteraction } from '../src/base_interaction.js'
 
 test.group('Interaction', () => {
   test('assert interaction name', async ({ assert }) => {

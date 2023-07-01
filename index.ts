@@ -7,11 +7,10 @@
  * file that was distributed with this source code.
  */
 
-import './src/extended_types'
+import './src/extended_types.js'
 
-export * from './src/types'
-export { BasePage } from './src/base_page'
-export { decorateBrowser } from './src/browser'
-export { browserClient } from './src/plugin/main'
-export { BaseInteraction } from './src/base_interaction'
+export { BasePage } from './src/base_page.js'
+export { decorateBrowser } from './src/browser.js'
+export { browserClient } from './src/plugin/main.js'
+export { BaseInteraction } from './src/base_interaction.js'
 export { decoratorsCollection } from './src/decorators_collection.js'

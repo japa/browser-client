@@ -11,7 +11,7 @@ import sinon from 'sinon'
 import { test } from '@japa/runner'
 import { chromium } from 'playwright'
 
-import { addPauseMethods } from '../../src/decorators/pause'
+import { addPauseMethods } from '../../src/decorators/pause.js'
 
 test.group('Page | pauseIf', () => {
   test('pause if condition is true', async ({ assert, cleanup }) => {

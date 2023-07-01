@@ -7,6 +7,6 @@
  * file that was distributed with this source code.
  */
 
-import { debuglog } from 'util'
+import { debuglog } from 'node:util'
 
 export default debuglog('japa:browser-client')

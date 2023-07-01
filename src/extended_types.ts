@@ -9,9 +9,9 @@
 
 import type { Locator } from 'playwright'
 import type { Assert } from '@japa/assert'
-import type { BasePage } from './base_page'
-import type { VisitOptions } from './types'
-import { BaseInteraction } from './base_interaction'
+import type { BasePage } from './base_page.js'
+import type { VisitOptions } from './types.js'
+import { BaseInteraction } from './base_interaction.js'
 
 /**
  * Types for custom methods

@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import type { Decorator } from '../types'
+import type { Decorator } from '../types.js'
 
 /**
  * Decorates the page object with "pauseIf" and "pauseUnless"

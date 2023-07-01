@@ -7,20 +7,19 @@
  * file that was distributed with this source code.
  */
 
-import type { Config } from '@japa/runner'
+import type { CLIArgs } from '@japa/runner/types'
 import { LaunchOptions } from 'playwright'
 
-import debug from '../debug'
+import debug from '../debug.js'
 
 /**
  * Creates launcher options from the tests runner config
  */
-export function getLauncherOptions(runnerConfig: Config): LaunchOptions {
+export function getLauncherOptions(cliArgs: CLIArgs): LaunchOptions {
   const options = {
-    headless: !runnerConfig.cliArgs?.headed,
-    slowMo:
-      runnerConfig.cliArgs?.slow === true ? 100 : Number(runnerConfig.cliArgs?.slow) || undefined,
-    devtools: !!runnerConfig.cliArgs?.devtools,
+    headless: !cliArgs?.headed,
+    slowMo: cliArgs?.slow === true ? 100 : Number(cliArgs?.slow) || undefined,
+    devtools: !!cliArgs?.devtools,
   }
 
   debug('using launcher options %O', options)

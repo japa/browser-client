@@ -9,7 +9,7 @@
 
 import qs from 'qs'
 import type { Locator, Page } from 'playwright'
-import type { Decorator } from '../types'
+import type { Decorator } from '../types.js'
 
 /**
  * Returns locator for a selector

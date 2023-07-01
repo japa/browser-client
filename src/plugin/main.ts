@@ -9,21 +9,22 @@
 
 import fs from 'fs-extra'
 import type { BrowserContext, Browser as PlayWrightBrowser } from 'playwright'
-import { PluginFn, Suite, type TestContext as TestContextClass } from '@japa/runner'
+import { PluginFn } from '@japa/runner/types'
+import { Suite, TestContext } from '@japa/runner/core'
 
-import debug from '../debug'
-import type { PluginConfig } from '../types'
-import { decorateBrowser } from '../browser'
-import { traceActions } from './trace_actions'
-import { normalizeConfig } from './normalize_config'
-import { getLauncherOptions } from './get_launcher_options'
-import { decoratorsCollection } from '../decorators_collection'
-import { createContext, createFakeContext } from './create_context'
+import debug from '../debug.js'
+import type { PluginConfig } from '../types.js'
+import { decorateBrowser } from '../browser.js'
+import { traceActions } from './trace_actions.js'
+import { normalizeConfig } from './normalize_config.js'
+import { getLauncherOptions } from './get_launcher_options.js'
+import { decoratorsCollection } from '../decorators_collection.js'
+import { createContext, createFakeContext } from './create_context.js'
 
 /**
  * Extending types
  */
-declare module '@japa/runner' {
+declare module '@japa/runner/core' {
   export interface TestContext {
     /**
      * Playwright browser
@@ -48,36 +49,23 @@ declare module '@japa/runner' {
  * when running a test or a suite.
  */
 export function browserClient(config: PluginConfig) {
-  const clientPlugin: PluginFn = function (runnerConfig, runner, { TestContext }) {
-    /**
-     * Since the macro will be destructured, we want to set the
-     * value and update the scope to the current instance of
-     * context
-     */
-    TestContext.created((context) => {
-      context.visit = function (
-        this: TestContextClass,
-        ...args: Parameters<BrowserContext['visit']>
-      ) {
-        return this.browserContext.visit(...args)
-      }.bind(context)
-    })
-
+  const clientPlugin: PluginFn = function (japa) {
     /**
      * Normalizing config
      */
-    const normalizedConfig = normalizeConfig(runnerConfig, config)
+    const normalizedConfig = normalizeConfig(japa.cliArgs, config)
 
     /**
      * Normalizing launch options
      */
-    const launcherOptions = getLauncherOptions(runnerConfig)
+    const launcherOptions = getLauncherOptions(japa.cliArgs)
 
     /**
      * Hooking into a suite to launch the browser and context
      */
-    runner.onSuite((suite: Suite) => {
+    japa.runner.onSuite((suite: Suite) => {
       const initiateBrowser = !config.runInSuites || config.runInSuites.includes(suite.name)
+
       let browser: PlayWrightBrowser
 
       /**

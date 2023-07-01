@@ -7,11 +7,11 @@
  * file that was distributed with this source code.
  */
 
-import type { Decorator } from './types'
-import { addUseMethod } from './decorators/use'
-import { addVisitMethod } from './decorators/visit'
-import { addPauseMethods } from './decorators/pause'
-import { addAssertions } from './decorators/assertions'
+import type { Decorator } from './types.js'
+import { addUseMethod } from './decorators/use.js'
+import { addVisitMethod } from './decorators/visit.js'
+import { addPauseMethods } from './decorators/pause.js'
+import { addAssertions } from './decorators/assertions.js'
 
 /**
  * A singleton decorators collection to register decorators for

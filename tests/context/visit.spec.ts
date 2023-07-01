@@ -10,10 +10,10 @@
 import { test } from '@japa/runner'
 import { chromium } from 'playwright'
 
-import { BasePage } from '../../src/base_page'
-import { decorateBrowser } from '../../src/browser'
-import { ServerFactory } from '../../factories/server'
-import { addVisitMethod } from '../../src/decorators/visit'
+import { BasePage } from '../../src/base_page.js'
+import { decorateBrowser } from '../../src/browser.js'
+import { ServerFactory } from '../../factories/server.js'
+import { addVisitMethod } from '../../src/decorators/visit.js'
 
 test.group('Visit', () => {
   test('visit a url', async ({ assert, cleanup }) => {
