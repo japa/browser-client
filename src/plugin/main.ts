@@ -10,7 +10,7 @@
 import fs from 'fs-extra'
 import type { BrowserContext, Browser as PlayWrightBrowser } from 'playwright'
 import { PluginFn } from '@japa/runner/types'
-import { Suite, TestContext } from '@japa/runner/core'
+import { Suite } from '@japa/runner/core'
 
 import debug from '../debug.js'
 import type { PluginConfig } from '../types.js'
