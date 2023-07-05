@@ -1,0 +1,66 @@
+on:
+  workflow_call:
+    inputs:
+      disable-windows:
+        description: Disable running tests on Windows
+        type: boolean
+        default: false
+        required: false
+
+      install-playwright-browsers:
+        description: Install playwright browsers before running tests
+        type: boolean
+        default: false
+        required: false
+
+jobs:
+  test_linux:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.16.0, 20.x]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Install Playwright Browsers
+      if: ${{ inputs.install-playwright-browsers }}
+      run: npx playwright install --with-deps
+
+    - name: Run tests
+      run: npm test
+
+  test_windows:
+    if: ${{ !inputs.disable-windows }}
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        node-version: [18.16.0, 20.x]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Install Playwright Browsers
+      if: ${{ inputs.install-playwright-browsers }}
+      run: npx playwright install --with-deps
+
+    - name: Run tests
+      run: npm test
