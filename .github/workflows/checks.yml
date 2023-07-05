@@ -6,6 +6,8 @@ on:
 jobs:
   test:
     uses: japa/browser-client/.github/workflows/test.yml@next
+    with:
+      install-playwright-browsers: true
 
   lint:
     uses: japa/.github/.github/workflows/lint.yml@main
