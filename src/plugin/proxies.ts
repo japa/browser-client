@@ -18,7 +18,7 @@ export class BrowserProxy {
         throw new Error(
           `Cannot access "browser.${String(
             property
-          )}". The browser is not configured to run for "${suite}" tests`
+          )}". The browser is not configured to run for "${suite}" suite`
         )
       },
     })
@@ -36,7 +36,7 @@ export class BrowserContextProxy {
         throw new Error(
           `Cannot access "browserContext.${String(
             property
-          )}". The browser is not configured to run for "${suite}" tests`
+          )}". The browser is not configured to run for "${suite}" suite`
         )
       },
     })

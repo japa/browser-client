@@ -21,7 +21,7 @@
   },
   "scripts": {
     "pretest": "npm run lint && npm run typecheck",
-    "test": "cross-env NODE_DEBUG=japa:* c8 npm run quick:test",
+    "test": "cross-env NODE_DEBUG=japa:browser-client c8 npm run quick:test",
     "clean": "del-cli build",
     "compile": "npm run lint && npm run clean && tsc",
     "build": "npm run compile",
@@ -111,7 +111,9 @@
       "html"
     ],
     "exclude": [
-      "tests/**"
+      "tests/**",
+      "bin/**",
+      "factories/**"
     ]
   }
 }

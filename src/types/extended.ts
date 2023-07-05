@@ -12,6 +12,7 @@ import type { Locator } from 'playwright'
 import type { VisitOptions } from './main.js'
 import type { BasePage } from '../base/base_page.js'
 import type { BaseInteraction } from '../base/base_interaction.js'
+import type { BrowserContext, Browser as PlayWrightBrowser } from 'playwright'
 
 /**
  * Types for custom methods we attach on playwright via
@@ -202,5 +203,27 @@ declare module 'playwright' {
       page: PageModel,
       callback: (page: InstanceType<PageModel>) => void | Promise<void>
     ): Promise<void>
+  }
+}
+
+/**
+ * Extending types
+ */
+declare module '@japa/runner/core' {
+  export interface TestContext {
+    /**
+     * Playwright browser
+     */
+    browser: PlayWrightBrowser
+
+    /**
+     * Playwright browser context
+     */
+    browserContext: BrowserContext
+
+    /**
+     * Opens a new page and visit the URL
+     */
+    visit: BrowserContext['visit']
   }
 }

@@ -10,7 +10,7 @@
 import type { CLIArgs } from '@japa/runner/types'
 import { chromium, firefox, webkit } from 'playwright'
 
-import { PluginConfig } from '../types/main.js'
+import type { PluginConfig } from '../types/main.js'
 
 /**
  * Default launchers that can be selected using the '--browser' flag

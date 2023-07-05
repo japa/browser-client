@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
+import type { LaunchOptions } from 'playwright'
 import type { CLIArgs } from '@japa/runner/types'
-import { LaunchOptions } from 'playwright'
 
 import debug from '../debug.js'
 

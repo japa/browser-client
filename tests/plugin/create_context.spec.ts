@@ -13,7 +13,7 @@ import { test } from '@japa/runner'
 
 import { decorateBrowser } from '../../index.js'
 import { addVisitMethod } from '../../src/decorators/visit.js'
-import { createContext, createFakeContext } from '../../src/plugin/create_context.js'
+import { createContextHook, createFakeContextHook } from '../../src/plugin/hooks/create_context.js'
 
 test.group('Create context', () => {
   test('create browser context and assign it to test context', async ({ assert, cleanup }) => {
@@ -27,7 +27,7 @@ test.group('Create context', () => {
     const t = new Test('a sample test', createTestContext, emitter, refiner)
     t.context = createTestContext(t)
 
-    await createContext(browser, {}, t)
+    await createContextHook(browser, {}, t)
 
     assert.isDefined(t.context.browserContext)
     assert.strictEqual(t.context.browser, browser)
@@ -49,15 +49,15 @@ test.group('Create context', () => {
       },
     }
 
-    createFakeContext(t)
+    createFakeContextHook(t)
     assert.throws(
       () => t.context!.browser.newPage(),
-      'Cannot access "browser.newPage". The browser is not configured to run for "unit" tests'
+      'Cannot access "browser.newPage". The browser is not configured to run for "unit" suite'
     )
 
     assert.throws(
       () => t.context!.browserContext.newPage(),
-      'Cannot access "browserContext.newPage". The browser is not configured to run for "unit" tests'
+      'Cannot access "browserContext.newPage". The browser is not configured to run for "unit" suite'
     )
   })
 })
