@@ -1,4 +1,5 @@
 # @japa/browser-client
+
 > Browser client to write end to end browser tests. Uses playwright under the hood
 
 [![gh-actions-image]][gh-actions-url] [![npm-image]][npm-url] [![license-image]][license-url] ![typescript-image]
@@ -14,6 +15,7 @@ The browser client of Japa is built on top of [Playwright library](https://playw
 #### [Complete documentation](https://japa.dev/docs/plugins/browser-client)
 
 ## Installation
+
 Install the package from the npm registry as follows:
 
 ```sh
@@ -23,6 +25,7 @@ yarn add -D playwright @japa/browser-client
 ```
 
 ## Usage
+
 You can use the browser client package with the `@japa/runner` as follows.
 
 ```ts
@@ -36,10 +39,10 @@ configure({
     plugins: [
       assert(),
       browserClient({
-        runInSuites: ['browser']
-      })
-    ]
-  }
+        runInSuites: ['browser'],
+      }),
+    ],
+  },
 })
 ```
 
@@ -60,12 +63,10 @@ test('test title', ({ browser, browserContext, visit }) => {
 })
 ```
 
-[gh-actions-image]: https://img.shields.io/github/actions/workflow/status/japa/browser-client/test.yml?style=for-the-badge
-[gh-actions-url]: https://github.com/japa/browser-client/actions/workflows/test.yml 'Github action'
+[gh-actions-image]: https://img.shields.io/github/actions/workflow/status/japa/browser-client/checks.yml?style=for-the-badge
+[gh-actions-url]: https://github.com/japa/browser-client/actions/workflows/checks.yml 'Github action'
 [npm-image]: https://img.shields.io/npm/v/@japa/browser-client/latest.svg?style=for-the-badge&logo=npm
 [npm-url]: https://www.npmjs.com/package/@japa/browser-client/v/latest 'npm'
 [typescript-image]: https://img.shields.io/badge/Typescript-294E80.svg?style=for-the-badge&logo=typescript
 [license-url]: LICENSE.md
 [license-image]: https://img.shields.io/github/license/japa/browser-client?style=for-the-badge
-[snyk-image]: https://img.shields.io/snyk/vulnerabilities/github/japa/browser-client?label=Snyk%20Vulnerabilities&style=for-the-badge
-[snyk-url]: https://snyk.io/test/github/japa/browser-client?targetFile=package.json 'snyk'
