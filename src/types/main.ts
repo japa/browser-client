@@ -1,7 +1,7 @@
 /*
  * @japa/browser-client
  *
- * (c) Japa.dev
+ * (c) Japa
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -11,8 +11,8 @@ import type {
   Page,
   Browser,
   Response,
-  BrowserContext,
   LaunchOptions,
+  BrowserContext,
   BrowserContextOptions,
 } from 'playwright'
 
@@ -58,9 +58,10 @@ export type PluginConfig = {
   launcher?: (config: Pick<LaunchOptions, 'headless' | 'slowMo' | 'devtools'>) => Promise<Browser>
 
   /**
-   * An optional array of suites that will be interacting
-   * with the browser. All suites will great a browser
-   * context if no specific suites are configured
+   * An optional array of suites that will be interacting with the
+   * browser. It is recommended to configure this plugin for
+   * specific suite, otherwise a browser instance will be
+   * created for all tests across all the suites.
    */
   runInSuites?: string[]
 }

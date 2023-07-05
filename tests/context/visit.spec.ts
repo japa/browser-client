@@ -10,10 +10,10 @@
 import { test } from '@japa/runner'
 import { chromium } from 'playwright'
 
-import { BasePage } from '../../src/base_page.js'
-import { decorateBrowser } from '../../src/browser.js'
+import { BasePage } from '../../src/base/base_page.js'
 import { ServerFactory } from '../../factories/server.js'
 import { addVisitMethod } from '../../src/decorators/visit.js'
+import { decorateBrowser } from '../../src/decorate_browser.js'
 
 test.group('Visit', () => {
   test('visit a url', async ({ assert, cleanup }) => {
@@ -78,7 +78,7 @@ test.group('Visit', () => {
     await page.assertBody()
   })
 
-  test('define options using visit property', async ({ assert, cleanup }) => {
+  test('define options using visitOptions class property', async ({ assert, cleanup }) => {
     const server = new ServerFactory()
     await server.create((req, res) => {
       res.write(req.headers.referer)
@@ -106,6 +106,8 @@ test.group('Visit', () => {
   })
 
   test('get access to page model inside callback', async ({ assert, cleanup }) => {
+    assert.plan(1)
+
     const server = new ServerFactory()
     await server.create((_, res) => {
       res.write('hello world')

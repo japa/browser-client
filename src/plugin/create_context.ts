@@ -11,17 +11,17 @@ import type { Test } from '@japa/runner/core'
 import type { Browser as PlayWrightBrowser } from 'playwright'
 
 import debug from '../debug.js'
-import type { PluginConfig } from '../types.js'
+import type { PluginConfig } from '../types/main.js'
 import { BrowserContextProxy, BrowserProxy } from './proxies.js'
 
 /**
  * Creates a new browser context
  */
 export async function createContext(browser: PlayWrightBrowser, config: PluginConfig, test: Test) {
-  const context = test.context!
-  debug('creating browser context for test "%s"', context.test.title)
   const host = process.env.HOST
   const port = process.env.PORT
+  const context = test.context!
+  debug('creating browser context for test "%s"', context.test.title)
 
   /**
    * Share browser, context and visit method with the test
@@ -34,13 +34,6 @@ export async function createContext(browser: PlayWrightBrowser, config: PluginCo
   })
 
   context.visit = context.browserContext.visit.bind(context.browserContext)
-
-  /**
-   * Sharing assert with page
-   */
-  context.browserContext.on('page', function (page) {
-    page.assert = context.assert
-  })
 
   return () => {
     debug('closing browser context for test "%s"', context.test.title)

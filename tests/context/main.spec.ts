@@ -11,8 +11,8 @@ import cookie from 'cookie'
 import { test } from '@japa/runner'
 import { chromium } from 'playwright'
 
-import { decorateBrowser } from '../../src/browser.js'
 import { ServerFactory } from '../../factories/server.js'
+import { decorateBrowser } from '../../src/decorate_browser.js'
 
 test.group('Browser context', () => {
   test('get response cookies reflected on context', async ({ assert, cleanup }) => {

@@ -7,9 +7,9 @@
  * file that was distributed with this source code.
  */
 
-import { decoratePage } from './page.js'
-import type { Decorator } from './types.js'
-import { decorateContext } from './context.js'
+import { decoratePage } from './decorate_page.js'
+import type { Decorator } from './types/main.js'
+import { decorateContext } from './decorate_context.js'
 import type { Browser as PlayWrightBrowser, BrowserContextOptions } from 'playwright'
 
 /**
@@ -21,12 +21,13 @@ export function decorateBrowser(
   decorators: Decorator[]
 ): PlayWrightBrowser {
   const originalNewContext: typeof browser.newContext = browser.newContext.bind(browser)
+  const originalNewPage: typeof browser.newPage = browser.newPage.bind(browser)
+
   browser.newContext = async function (options?: BrowserContextOptions) {
     const context = await originalNewContext(options)
     return decorateContext(context, decorators)
   }
 
-  const originalNewPage: typeof browser.newPage = browser.newPage.bind(browser)
   browser.newPage = async function (...args: Parameters<typeof browser.newPage>) {
     const page = await originalNewPage(...args)
     return decoratePage(page, page.context(), decorators)

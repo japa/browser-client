@@ -11,7 +11,7 @@ import { join } from 'node:path'
 import type { Test } from '@japa/runner/core'
 import slugify from '@sindresorhus/slugify'
 
-import type { PluginConfig } from '../types.js'
+import type { PluginConfig } from '../types/main.js'
 
 /**
  * Tests hook to trace actions

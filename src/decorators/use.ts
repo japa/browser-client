@@ -7,9 +7,9 @@
  * file that was distributed with this source code.
  */
 
-import { BasePage } from '../base_page.js'
-import type { Decorator } from '../types.js'
-import { BaseInteraction } from '../base_interaction.js'
+import { BasePage } from '../base/base_page.js'
+import type { Decorator } from '../types/main.js'
+import { BaseInteraction } from '../base/base_interaction.js'
 
 /**
  * Decorates the page object with "use" method.

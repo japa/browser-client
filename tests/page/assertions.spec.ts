@@ -10,6 +10,7 @@
 import { test } from '@japa/runner'
 import { chromium } from 'playwright'
 
+import { decorateBrowser } from '../../index.js'
 import { ServerFactory } from '../../factories/server.js'
 import { addAssertions } from '../../src/decorators/assertions.js'
 
@@ -32,15 +33,13 @@ test.group('Assertions', () => {
       res.end()
     })
 
-    const browser = await chromium.launch()
+    const browser = decorateBrowser(await chromium.launch(), [addAssertions])
     cleanup(async () => {
       await server.close()
       await browser.close()
     })
 
     const page = await browser.newPage()
-    page.assert = assert
-    addAssertions.page(page)
 
     await page.goto(server.url)
     await page.assertExists('p')
@@ -72,15 +71,13 @@ test.group('Assertions', () => {
       res.end()
     })
 
-    const browser = await chromium.launch()
+    const browser = decorateBrowser(await chromium.launch(), [addAssertions])
     cleanup(async () => {
       await server.close()
       await browser.close()
     })
 
     const page = await browser.newPage()
-    page.assert = assert
-    addAssertions.page(page)
 
     await page.goto(server.url)
     await page.assertElementsCount('p', 2)
@@ -88,7 +85,7 @@ test.group('Assertions', () => {
     await page.assertElementsCount('ul > li ', 3)
     await assert.rejects(
       () => page.assertElementsCount('span', 1),
-      `expected 'span' to have 1 elements`
+      `expected 'span' to have '1' elements`
     )
   })
 
@@ -107,15 +104,13 @@ test.group('Assertions', () => {
       res.end()
     })
 
-    const browser = await chromium.launch()
+    const browser = decorateBrowser(await chromium.launch(), [addAssertions])
     cleanup(async () => {
       await server.close()
       await browser.close()
     })
 
     const page = await browser.newPage()
-    page.assert = assert
-    addAssertions.page(page)
 
     await page.goto(server.url)
     await page.assertNotExists('p')
@@ -139,15 +134,13 @@ test.group('Assertions', () => {
       res.end()
     })
 
-    const browser = await chromium.launch()
+    const browser = decorateBrowser(await chromium.launch(), [addAssertions])
     cleanup(async () => {
       await server.close()
       await browser.close()
     })
 
     const page = await browser.newPage()
-    page.assert = assert
-    addAssertions.page(page)
 
     await page.goto(server.url)
     await page.assertVisible('p')
@@ -171,15 +164,13 @@ test.group('Assertions', () => {
       res.end()
     })
 
-    const browser = await chromium.launch()
+    const browser = decorateBrowser(await chromium.launch(), [addAssertions])
     cleanup(async () => {
       await server.close()
       await browser.close()
     })
 
     const page = await browser.newPage()
-    page.assert = assert
-    addAssertions.page(page)
 
     await page.goto(server.url)
     await page.assertNotVisible('h1')
@@ -188,8 +179,6 @@ test.group('Assertions', () => {
   })
 
   test('assert page title', async ({ assert, cleanup }) => {
-    assert.plan(1)
-
     const server = new ServerFactory()
     await server.create((_, res) => {
       res.setHeader('content-type', 'text/html')
@@ -203,23 +192,23 @@ test.group('Assertions', () => {
       res.end()
     })
 
-    const browser = await chromium.launch()
+    const browser = decorateBrowser(await chromium.launch(), [addAssertions])
     cleanup(async () => {
       await server.close()
       await browser.close()
     })
 
     const page = await browser.newPage()
-    page.assert = assert
-    addAssertions.page(page)
 
     await page.goto(server.url)
     await page.assertTitle('Hello world')
+    await assert.rejects(
+      () => page.assertTitle('Foo'),
+      "expected page title 'Hello world' to equal 'Foo'"
+    )
   })
 
   test('assert page title to include a substr', async ({ assert, cleanup }) => {
-    assert.plan(1)
-
     const server = new ServerFactory()
     await server.create((_, res) => {
       res.setHeader('content-type', 'text/html')
@@ -233,18 +222,20 @@ test.group('Assertions', () => {
       res.end()
     })
 
-    const browser = await chromium.launch()
+    const browser = decorateBrowser(await chromium.launch(), [addAssertions])
     cleanup(async () => {
       await server.close()
       await browser.close()
     })
 
     const page = await browser.newPage()
-    page.assert = assert
-    addAssertions.page(page)
 
     await page.goto(server.url)
     await page.assertTitleContains('world')
+    await assert.rejects(
+      () => page.assertTitleContains('Foo'),
+      "expected page title 'Hello world' to include 'Foo'"
+    )
   })
 
   test('assert page URL', async ({ assert, cleanup }) => {
@@ -263,18 +254,20 @@ test.group('Assertions', () => {
       res.end()
     })
 
-    const browser = await chromium.launch()
+    const browser = decorateBrowser(await chromium.launch(), [addAssertions])
     cleanup(async () => {
       await server.close()
       await browser.close()
     })
 
     const page = await browser.newPage()
-    page.assert = assert
-    addAssertions.page(page)
 
     await page.goto(`${server.url}/foo/bar`)
     await page.assertUrl(`${server.url}/foo/bar`)
+    await assert.rejects(
+      () => page.assertUrl('Foo'),
+      "expected page URL 'http://localhost:3000/foo/bar' to equal 'Foo'"
+    )
   })
 
   test('assert page URL with query string', async ({ assert, cleanup }) => {
@@ -293,18 +286,20 @@ test.group('Assertions', () => {
       res.end()
     })
 
-    const browser = await chromium.launch()
+    const browser = decorateBrowser(await chromium.launch(), [addAssertions])
     cleanup(async () => {
       await server.close()
       await browser.close()
     })
 
     const page = await browser.newPage()
-    page.assert = assert
-    addAssertions.page(page)
 
     await page.goto(`${server.url}/foo/bar?sort=id`)
     await page.assertUrl(`${server.url}/foo/bar?sort=id`)
+    await assert.rejects(
+      () => page.assertUrl('Foo?sort=id'),
+      "expected page URL 'http://localhost:3000/foo/bar?sort=id' to equal 'Foo?sort=id'"
+    )
   })
 
   test('assert page URL to include a substring', async ({ assert, cleanup }) => {
@@ -323,18 +318,20 @@ test.group('Assertions', () => {
       res.end()
     })
 
-    const browser = await chromium.launch()
+    const browser = decorateBrowser(await chromium.launch(), [addAssertions])
     cleanup(async () => {
       await server.close()
       await browser.close()
     })
 
     const page = await browser.newPage()
-    page.assert = assert
-    addAssertions.page(page)
 
     await page.goto(`${server.url}/foo/bar?sort=id`)
     await page.assertUrlContains(`${server.url}/foo/bar`)
+    await assert.rejects(
+      () => page.assertUrlContains('baz'),
+      "expected page URL 'http://localhost:3000/foo/bar?sort=id' to include 'baz'"
+    )
   })
 
   test('assert page URL to match regex', async ({ assert, cleanup }) => {
@@ -351,24 +348,23 @@ test.group('Assertions', () => {
       res.end()
     })
 
-    const browser = await chromium.launch()
+    const browser = decorateBrowser(await chromium.launch(), [addAssertions])
     cleanup(async () => {
       await server.close()
       await browser.close()
     })
 
     const page = await browser.newPage()
-    page.assert = assert
-    addAssertions.page(page)
 
     await page.goto(`${server.url}/foo/bar?sort=id`)
     await page.assertUrlMatches(/foo/)
-    await assert.rejects(() => page.assertUrlMatches(/baz/), 'expected page URL to match /baz/')
+    await assert.rejects(
+      () => page.assertUrlMatches(/baz/),
+      "expected page URL 'http://localhost:3000/foo/bar?sort=id' to match '/baz/'"
+    )
   })
 
   test('assert page path', async ({ assert, cleanup }) => {
-    assert.plan(1)
-
     const server = new ServerFactory()
     await server.create((_, res) => {
       res.setHeader('content-type', 'text/html')
@@ -382,23 +378,23 @@ test.group('Assertions', () => {
       res.end()
     })
 
-    const browser = await chromium.launch()
+    const browser = decorateBrowser(await chromium.launch(), [addAssertions])
     cleanup(async () => {
       await server.close()
       await browser.close()
     })
 
     const page = await browser.newPage()
-    page.assert = assert
-    addAssertions.page(page)
 
     await page.goto(`${server.url}/foo/bar`)
     await page.assertPath('/foo/bar')
+    await assert.rejects(
+      () => page.assertPath('baz'),
+      "expected page pathname '/foo/bar' to equal 'baz'"
+    )
   })
 
   test('assert page path to contain a substring', async ({ assert, cleanup }) => {
-    assert.plan(1)
-
     const server = new ServerFactory()
     await server.create((_, res) => {
       res.setHeader('content-type', 'text/html')
@@ -412,23 +408,23 @@ test.group('Assertions', () => {
       res.end()
     })
 
-    const browser = await chromium.launch()
+    const browser = decorateBrowser(await chromium.launch(), [addAssertions])
     cleanup(async () => {
       await server.close()
       await browser.close()
     })
 
     const page = await browser.newPage()
-    page.assert = assert
-    addAssertions.page(page)
 
     await page.goto(`${server.url}/foo/bar`)
     await page.assertPathContains('foo')
+    await assert.rejects(
+      () => page.assertPathContains('baz'),
+      "expected page pathname '/foo/bar' to include 'baz'"
+    )
   })
 
   test('assert page path to match regex', async ({ assert, cleanup }) => {
-    assert.plan(1)
-
     const server = new ServerFactory()
     await server.create((_, res) => {
       res.setHeader('content-type', 'text/html')
@@ -442,23 +438,23 @@ test.group('Assertions', () => {
       res.end()
     })
 
-    const browser = await chromium.launch()
+    const browser = decorateBrowser(await chromium.launch(), [addAssertions])
     cleanup(async () => {
       await server.close()
       await browser.close()
     })
 
     const page = await browser.newPage()
-    page.assert = assert
-    addAssertions.page(page)
 
     await page.goto(`${server.url}/foo/bar`)
     await page.assertPathMatches(/foo/)
+    await assert.rejects(
+      () => page.assertPathMatches(/baz/),
+      "expected page pathname '/foo/bar' to match '/baz/'"
+    )
   })
 
   test('assert page path with query string', async ({ assert, cleanup }) => {
-    assert.plan(1)
-
     const server = new ServerFactory()
     await server.create((_, res) => {
       res.setHeader('content-type', 'text/html')
@@ -472,23 +468,23 @@ test.group('Assertions', () => {
       res.end()
     })
 
-    const browser = await chromium.launch()
+    const browser = decorateBrowser(await chromium.launch(), [addAssertions])
     cleanup(async () => {
       await server.close()
       await browser.close()
     })
 
     const page = await browser.newPage()
-    page.assert = assert
-    addAssertions.page(page)
 
     await page.goto(`${server.url}/foo/bar?sort=id`)
     await page.assertPath('/foo/bar')
+    await assert.rejects(
+      () => page.assertPath('baz'),
+      "expected page pathname '/foo/bar' to equal 'baz'"
+    )
   })
 
   test('assert page query string', async ({ assert, cleanup }) => {
-    assert.plan(1)
-
     const server = new ServerFactory()
     await server.create((_, res) => {
       res.setHeader('content-type', 'text/html')
@@ -502,18 +498,20 @@ test.group('Assertions', () => {
       res.end()
     })
 
-    const browser = await chromium.launch()
+    const browser = decorateBrowser(await chromium.launch(), [addAssertions])
     cleanup(async () => {
       await server.close()
       await browser.close()
     })
 
     const page = await browser.newPage()
-    page.assert = assert
-    addAssertions.page(page)
 
     await page.goto(`${server.url}/foo/bar?sort=id`)
     await page.assertQueryString({ sort: 'id' })
+    await assert.rejects(
+      () => page.assertQueryString({ orderBy: 'id' }),
+      "expected '{ sort: 'id' }' to contain '{ orderBy: 'id' }'"
+    )
   })
 
   test('assert page to have a cookie', async ({ assert, cleanup }) => {
@@ -534,15 +532,13 @@ test.group('Assertions', () => {
       res.end()
     })
 
-    const browser = await chromium.launch()
+    const browser = decorateBrowser(await chromium.launch(), [addAssertions])
     cleanup(async () => {
       await server.close()
       await browser.close()
     })
 
     const page = await browser.newPage()
-    page.assert = assert
-    addAssertions.page(page)
 
     await page.goto(server.url)
     await assert.rejects(
@@ -581,15 +577,13 @@ test.group('Assertions', () => {
       res.end()
     })
 
-    const browser = await chromium.launch()
+    const browser = decorateBrowser(await chromium.launch(), [addAssertions])
     cleanup(async () => {
       await server.close()
       await browser.close()
     })
 
     const page = await browser.newPage()
-    page.assert = assert
-    addAssertions.page(page)
 
     await page.goto(server.url)
     await assert.doesNotRejects(() => page.assertCookieMissing('cart_items'))
@@ -601,7 +595,7 @@ test.group('Assertions', () => {
     )
   })
 
-  test('assert element innerText', async ({ assert, cleanup }) => {
+  test('assert element innerText', async ({ cleanup }) => {
     const server = new ServerFactory()
     await server.create((req, res) => {
       if (req.url === '/set_cookie') {
@@ -621,15 +615,13 @@ test.group('Assertions', () => {
       res.end()
     })
 
-    const browser = await chromium.launch()
+    const browser = decorateBrowser(await chromium.launch(), [addAssertions])
     cleanup(async () => {
       await server.close()
       await browser.close()
     })
 
     const page = await browser.newPage()
-    page.assert = assert
-    addAssertions.page(page)
 
     await page.goto(server.url)
     await page.assertText('body', ['It works!', '', 'Hello world'].join('\n'))
@@ -637,7 +629,7 @@ test.group('Assertions', () => {
     await page.assertText('p', 'Hello world')
   })
 
-  test('assert elementsText', async ({ assert, cleanup }) => {
+  test('assert elementsText', async ({ cleanup }) => {
     const server = new ServerFactory()
     await server.create((req, res) => {
       if (req.url === '/set_cookie') {
@@ -660,21 +652,19 @@ test.group('Assertions', () => {
       res.end()
     })
 
-    const browser = await chromium.launch()
+    const browser = decorateBrowser(await chromium.launch(), [addAssertions])
     cleanup(async () => {
       await server.close()
       await browser.close()
     })
 
     const page = await browser.newPage()
-    page.assert = assert
-    addAssertions.page(page)
 
     await page.goto(server.url)
     await page.assertElementsText('ul > li', ['Hello world', 'Hi world', 'Bye world'])
   })
 
-  test('assert element innerText to include substring', async ({ assert, cleanup }) => {
+  test('assert element innerText to include substring', async ({ cleanup }) => {
     const server = new ServerFactory()
     await server.create((req, res) => {
       if (req.url === '/set_cookie') {
@@ -694,15 +684,13 @@ test.group('Assertions', () => {
       res.end()
     })
 
-    const browser = await chromium.launch()
+    const browser = decorateBrowser(await chromium.launch(), [addAssertions])
     cleanup(async () => {
       await server.close()
       await browser.close()
     })
 
     const page = await browser.newPage()
-    page.assert = assert
-    addAssertions.page(page)
 
     await page.goto(server.url)
 
@@ -734,15 +722,13 @@ test.group('Assertions', () => {
       res.end()
     })
 
-    const browser = await chromium.launch()
+    const browser = decorateBrowser(await chromium.launch(), [addAssertions])
     cleanup(async () => {
       await server.close()
       await browser.close()
     })
 
     const page = await browser.newPage()
-    page.assert = assert
-    addAssertions.page(page)
 
     await page.goto(server.url)
 
@@ -781,15 +767,13 @@ test.group('Assertions', () => {
       res.end()
     })
 
-    const browser = await chromium.launch()
+    const browser = decorateBrowser(await chromium.launch(), [addAssertions])
     cleanup(async () => {
       await server.close()
       await browser.close()
     })
 
     const page = await browser.newPage()
-    page.assert = assert
-    addAssertions.page(page)
 
     await page.goto(server.url)
 
@@ -828,15 +812,13 @@ test.group('Assertions', () => {
       res.end()
     })
 
-    const browser = await chromium.launch()
+    const browser = decorateBrowser(await chromium.launch(), [addAssertions])
     cleanup(async () => {
       await server.close()
       await browser.close()
     })
 
     const page = await browser.newPage()
-    page.assert = assert
-    addAssertions.page(page)
 
     await page.goto(server.url)
 
@@ -874,15 +856,13 @@ test.group('Assertions', () => {
       res.end()
     })
 
-    const browser = await chromium.launch()
+    const browser = decorateBrowser(await chromium.launch(), [addAssertions])
     cleanup(async () => {
       await server.close()
       await browser.close()
     })
 
     const page = await browser.newPage()
-    page.assert = assert
-    addAssertions.page(page)
 
     await page.goto(server.url)
 
@@ -922,15 +902,13 @@ test.group('Assertions', () => {
       res.end()
     })
 
-    const browser = await chromium.launch()
+    const browser = decorateBrowser(await chromium.launch(), [addAssertions])
     cleanup(async () => {
       await server.close()
       await browser.close()
     })
 
     const page = await browser.newPage()
-    page.assert = assert
-    addAssertions.page(page)
 
     await page.goto(server.url)
 
@@ -984,15 +962,13 @@ test.group('Assertions', () => {
       res.end()
     })
 
-    const browser = await chromium.launch()
+    const browser = decorateBrowser(await chromium.launch(), [addAssertions])
     cleanup(async () => {
       await server.close()
       await browser.close()
     })
 
     const page = await browser.newPage()
-    page.assert = assert
-    addAssertions.page(page)
 
     await page.goto(server.url)
 

@@ -10,7 +10,7 @@
 import { test } from '@japa/runner'
 import { chromium } from 'playwright'
 
-import { decorateBrowser } from '../src/browser.js'
+import { decorateBrowser } from '../src/decorate_browser.js'
 import { ServerFactory } from '../factories/server.js'
 
 test.group('Browser', () => {

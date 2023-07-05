@@ -8,17 +8,18 @@
  */
 
 import type { Locator } from 'playwright'
-import type { Assert } from '@japa/assert'
-import type { BasePage } from './base_page.js'
-import type { VisitOptions } from './types.js'
-import { BaseInteraction } from './base_interaction.js'
+
+import type { VisitOptions } from './main.js'
+import type { BasePage } from '../base/base_page.js'
+import type { BaseInteraction } from '../base/base_interaction.js'
 
 /**
- * Types for custom methods
+ * Types for custom methods we attach on playwright via
+ * inbuilt decorators
  */
 declare module 'playwright' {
   export interface Page {
-    assert: Assert
+    // assert: Assert
 
     /**
      * Use a page or an interaction to perform actions
@@ -114,7 +115,7 @@ declare module 'playwright' {
      * Asserts the page URL querystring to match the subset
      * object
      */
-    assertQueryString(queryStringSubset: Record<string, any>): Promise<void>
+    assertQueryString(expectedSubset: Record<string, any>): Promise<void>
 
     /**
      * Assert cookie to exist and optionally match the expected

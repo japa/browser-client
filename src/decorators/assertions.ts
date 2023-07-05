@@ -8,8 +8,12 @@
  */
 
 import qs from 'qs'
+import { inspect } from 'node:util'
+import { AssertionError } from 'node:assert'
 import type { Locator, Page } from 'playwright'
-import type { Decorator } from '../types.js'
+
+import type { Decorator } from '../types/main.js'
+import { isSubsetOf } from '../helpers.js'
 
 /**
  * Returns locator for a selector
@@ -23,301 +27,255 @@ function getLocator(selector: string | Locator, page: Page): Locator {
  */
 export const addAssertions = {
   page(page) {
-    page.assertExists = async function (selector) {
+    page.assertExists = async function assertExists(selector) {
       const matchingCount = await getLocator(selector, this).count()
 
-      this.assert.incrementAssertionsCount()
-      this.assert.evaluate(matchingCount > 0, 'expected #{this} element to exist', {
-        thisObject: selector,
-        actual: '',
-        expected: '',
-        showDiff: false,
-        operator: 'strictEqual',
-      })
+      if (matchingCount <= 0) {
+        throw new AssertionError({
+          message: `expected ${inspect(selector)} element to exist`,
+          stackStartFn: assertExists,
+        })
+      }
     }
 
-    page.assertNotExists = async function (selector) {
+    page.assertNotExists = async function assertNotExists(selector) {
       const matchingCount = await getLocator(selector, this).count()
 
-      this.assert.incrementAssertionsCount()
-      this.assert.evaluate(matchingCount === 0, 'expected #{this} element to not exist', {
-        thisObject: selector,
-        actual: '',
-        expected: '',
-        showDiff: false,
-        operator: 'strictEqual',
-      })
+      if (matchingCount !== 0) {
+        throw new AssertionError({
+          message: `expected ${inspect(selector)} element to not exist`,
+          stackStartFn: assertNotExists,
+        })
+      }
     }
 
-    page.assertElementsCount = async function (selector, expectedCount) {
+    page.assertElementsCount = async function assertElementsCount(selector, expectedCount) {
       const matchingCount = await getLocator(selector, this).count()
 
-      this.assert.incrementAssertionsCount()
-      this.assert.evaluate(
-        matchingCount === expectedCount,
-        'expected #{this} to have #{exp} elements',
-        {
-          thisObject: selector,
+      if (matchingCount !== expectedCount) {
+        throw new AssertionError({
+          message: `expected ${inspect(selector)} to have '${expectedCount}' elements`,
+          stackStartFn: assertElementsCount,
           actual: matchingCount,
           expected: expectedCount,
-          showDiff: true,
-          operator: 'strictEqual',
-        }
-      )
+        })
+      }
     }
 
-    page.assertVisible = async function (selector) {
+    page.assertVisible = async function assertVisible(selector) {
       const isVisible = await getLocator(selector, this).isVisible()
 
-      this.assert.incrementAssertionsCount()
-      this.assert.evaluate(isVisible, 'expected #{this} element to be visible', {
-        thisObject: selector,
-        actual: '',
-        expected: '',
-        showDiff: false,
-        operator: 'strictEqual',
-      })
+      if (!isVisible) {
+        throw new AssertionError({
+          message: `expected ${inspect(selector)} element to be visible`,
+          stackStartFn: assertVisible,
+        })
+      }
     }
 
-    page.assertNotVisible = async function (selector) {
+    page.assertNotVisible = async function assertNotVisible(selector) {
       const isVisible = await getLocator(selector, this).isVisible()
 
-      this.assert.incrementAssertionsCount()
-      this.assert.evaluate(!isVisible, 'expected #{this} element to be not visible', {
-        thisObject: selector,
-        actual: '',
-        expected: '',
-        showDiff: false,
-        operator: 'strictEqual',
-      })
+      if (isVisible) {
+        throw new AssertionError({
+          message: `expected ${inspect(selector)} element to be not visible`,
+          stackStartFn: assertNotVisible,
+        })
+      }
     }
 
-    page.assertTitle = async function (expectedTitle) {
+    page.assertTitle = async function assertTitle(expectedTitle) {
       const pageTitle = await this.title()
 
-      this.assert.incrementAssertionsCount()
-      this.assert.evaluate(pageTitle === expectedTitle, 'expected page title to equal #{exp}', {
-        actual: pageTitle,
-        expected: expectedTitle,
-        showDiff: true,
-        operator: 'strictEqual',
-      })
-    }
-
-    page.assertTitleContains = async function (expectedSubstring) {
-      const pageTitle = await this.title()
-
-      this.assert.incrementAssertionsCount()
-      this.assert.evaluate(
-        pageTitle.includes(expectedSubstring),
-        'expected page title to include #{exp}',
-        {
+      if (pageTitle !== expectedTitle) {
+        throw new AssertionError({
+          message: `expected page title '${pageTitle}' to equal '${expectedTitle}'`,
+          stackStartFn: assertTitle,
           actual: pageTitle,
-          expected: expectedSubstring,
-          showDiff: false,
-          operator: 'strictEqual',
-        }
-      )
+          expected: expectedTitle,
+        })
+      }
     }
 
-    page.assertUrl = async function (expectedUrl) {
-      const pageURL = this.url()
+    page.assertTitleContains = async function assertTitleContains(expectedSubstring) {
+      const pageTitle = await this.title()
 
-      this.assert.incrementAssertionsCount()
-      this.assert.evaluate(pageURL === expectedUrl, 'expected page URL to equal #{exp}', {
-        actual: pageURL,
-        expected: expectedUrl,
-        showDiff: true,
-        operator: 'strictEqual',
-      })
+      if (!pageTitle.includes(expectedSubstring)) {
+        throw new AssertionError({
+          message: `expected page title '${pageTitle}' to include '${expectedSubstring}'`,
+          stackStartFn: assertTitleContains,
+        })
+      }
     }
 
-    page.assertUrlContains = async function (expectedSubstring) {
+    page.assertUrl = async function assertUrl(expectedUrl) {
       const pageURL = this.url()
 
-      this.assert.incrementAssertionsCount()
-      this.assert.evaluate(
-        pageURL.includes(expectedSubstring),
-        'expected page URL to include #{exp}',
-        {
+      if (pageURL !== expectedUrl) {
+        throw new AssertionError({
+          message: `expected page URL '${pageURL}' to equal '${expectedUrl}'`,
+          stackStartFn: assertUrl,
           actual: pageURL,
-          expected: expectedSubstring,
-          showDiff: false,
-          operator: 'strictEqual',
-        }
-      )
+          expected: expectedUrl,
+        })
+      }
     }
 
-    page.assertUrlMatches = async function (regex) {
+    page.assertUrlContains = async function assertUrlContains(expectedSubstring) {
       const pageURL = this.url()
 
-      this.assert.incrementAssertionsCount()
-      this.assert.evaluate(regex.test(pageURL), 'expected page URL to match #{exp}', {
-        actual: pageURL,
-        expected: regex,
-        showDiff: false,
-        operator: 'strictEqual',
-      })
+      if (!pageURL.includes(expectedSubstring)) {
+        throw new AssertionError({
+          message: `expected page URL '${pageURL}' to include '${expectedSubstring}'`,
+          stackStartFn: assertUrlContains,
+        })
+      }
     }
 
-    page.assertPath = async function (expectedPathName) {
-      const pageURL = new URL(this.url())
+    page.assertUrlMatches = async function assertUrlMatches(regex) {
+      const pageURL = this.url()
 
-      this.assert.incrementAssertionsCount()
-      this.assert.evaluate(
-        pageURL.pathname === expectedPathName,
-        'expected page path to equal #{exp}',
-        {
-          actual: pageURL.pathname,
+      if (!regex.test(pageURL)) {
+        throw new AssertionError({
+          message: `expected page URL '${pageURL}' to match '${regex}'`,
+          stackStartFn: assertUrlMatches,
+        })
+      }
+    }
+
+    page.assertPath = async function assertPath(expectedPathName) {
+      const { pathname } = new URL(this.url())
+
+      if (pathname !== expectedPathName) {
+        throw new AssertionError({
+          message: `expected page pathname '${pathname}' to equal '${expectedPathName}'`,
+          stackStartFn: assertPath,
+          actual: pathname,
           expected: expectedPathName,
-          showDiff: true,
-          operator: 'strictEqual',
-        }
-      )
+        })
+      }
     }
 
-    page.assertPathContains = async function (expectedSubstring) {
+    page.assertPathContains = async function assertPathContains(expectedSubstring) {
+      const { pathname } = new URL(this.url())
+
+      if (!pathname.includes(expectedSubstring)) {
+        throw new AssertionError({
+          message: `expected page pathname '${pathname}' to include '${expectedSubstring}'`,
+          stackStartFn: assertPathContains,
+        })
+      }
+    }
+
+    page.assertPathMatches = async function assertPathMatches(regex) {
+      const { pathname } = new URL(this.url())
+
+      if (!regex.test(pathname)) {
+        throw new AssertionError({
+          message: `expected page pathname '${pathname}' to match '${regex}'`,
+          stackStartFn: assertPathMatches,
+        })
+      }
+    }
+
+    page.assertQueryString = async function assertQueryString(expectedSubset) {
       const pageURL = new URL(this.url())
+      const queryString = qs.parse(pageURL.search, { ignoreQueryPrefix: true })
 
-      this.assert.incrementAssertionsCount()
-      this.assert.evaluate(
-        pageURL.pathname.includes(expectedSubstring),
-        'expected page path to include #{exp}',
-        {
-          actual: pageURL.pathname,
-          expected: expectedSubstring,
-          showDiff: false,
-          operator: 'strictEqual',
-        }
-      )
+      if (!isSubsetOf(queryString, expectedSubset)) {
+        throw new AssertionError({
+          message: `expected '${inspect(queryString)}' to contain '${inspect(expectedSubset)}'`,
+          stackStartFn: assertQueryString,
+          actual: queryString,
+          expected: expectedSubset,
+        })
+      }
     }
 
-    page.assertPathMatches = async function (regex) {
-      const pageURL = new URL(this.url())
-
-      this.assert.incrementAssertionsCount()
-      this.assert.evaluate(regex.test(pageURL.pathname), 'expected page path to match #{exp}', {
-        actual: pageURL.pathname,
-        expected: regex,
-        showDiff: false,
-        operator: 'strictEqual',
-      })
-    }
-
-    page.assertQueryString = async function (queryStringSubset) {
-      const pageURL = new URL(this.url())
-      this.assert.containsSubset(
-        qs.parse(pageURL.search, { ignoreQueryPrefix: true }),
-        queryStringSubset
-      )
-    }
-
-    page.assertCookie = async function (cookieName, value?) {
+    page.assertCookie = async function assertCookie(cookieName, value?) {
       const pageCookies = await this.context().cookies()
-      this.assert.incrementAssertionsCount()
-
       const matchingCookie = pageCookies.find(({ name }) => name === cookieName)
+
       if (!matchingCookie) {
-        this.assert.evaluate(false, 'expected #{exp} cookie to exist', {
-          actual: null,
-          expected: cookieName,
-          showDiff: false,
-          operator: 'strictEqual',
+        throw new AssertionError({
+          message: `expected '${cookieName}' cookie to exist`,
+          stackStartFn: assertCookie,
         })
-
-        return
       }
 
-      if (value) {
-        this.assert.evaluate(
-          matchingCookie.value === value,
-          'expected #{this} cookie value to equal #{exp}',
-          {
-            thisObject: cookieName,
-            actual: matchingCookie.value,
-            expected: value,
-            showDiff: true,
-            operator: 'strictEqual',
-          }
-        )
-
-        return
+      if (value && matchingCookie.value !== value) {
+        throw new AssertionError({
+          message: `expected '${cookieName}' cookie value to equal '${value}'`,
+          stackStartFn: assertCookie,
+          actual: matchingCookie.value,
+          expected: value,
+        })
       }
     }
 
-    page.assertCookieMissing = async function (cookieName) {
+    page.assertCookieMissing = async function assertCookieMissing(cookieName) {
       const pageCookies = await this.context().cookies()
-      this.assert.incrementAssertionsCount()
-
       const matchingCookie = pageCookies.find(({ name }) => name === cookieName)
-      if (matchingCookie) {
-        this.assert.evaluate(false, 'expected #{exp} cookie to not exist', {
-          actual: null,
-          expected: cookieName,
-          showDiff: false,
-          operator: 'strictEqual',
-        })
 
-        return
+      if (matchingCookie) {
+        throw new AssertionError({
+          message: `expected '${cookieName}' cookie to not exist`,
+          stackStartFn: assertCookieMissing,
+        })
       }
     }
 
-    page.assertText = async function (selector, expectedValue) {
-      this.assert.incrementAssertionsCount()
-
+    page.assertText = async function assertText(selector, expectedValue) {
       const actual = await getLocator(selector, this).innerText({ timeout: 2000 })
-      this.assert.evaluate(
-        actual === expectedValue,
-        'expected #{this} inner text to equal #{exp}',
-        {
-          thisObject: selector,
+      if (actual !== expectedValue) {
+        throw new AssertionError({
+          message: `expected ${inspect(selector)} inner text to equal '${expectedValue}'`,
+          stackStartFn: assertText,
           actual: actual,
           expected: expectedValue,
-          showDiff: true,
-          operator: 'strictEqual',
-        }
-      )
+        })
+      }
     }
 
-    page.assertElementsText = async function (selector, expectedValues) {
+    page.assertElementsText = async function assertElementsText(selector, expectedValues) {
       const innertTexts = await getLocator(selector, this).allInnerTexts()
-      this.assert.deepEqual(innertTexts, expectedValues)
+
+      innertTexts.forEach((text, index) => {
+        if (text !== expectedValues[index]) {
+          throw new AssertionError({
+            message: `expected ${inspect(selector)} value to deeply equal ${inspect(
+              expectedValues
+            )} in same order`,
+            stackStartFn: assertElementsText,
+            actual: innertTexts,
+            expected: expectedValues,
+          })
+        }
+      })
     }
 
-    page.assertTextContains = async function (selector, expectedSubstring) {
-      this.assert.incrementAssertionsCount()
-
+    page.assertTextContains = async function assertTextContains(selector, expectedSubstring) {
       const actual = await getLocator(selector, this).innerText({ timeout: 2000 })
-      this.assert.evaluate(
-        actual.includes(expectedSubstring),
-        'expected #{this} inner text to include #{exp}',
-        {
-          thisObject: selector,
-          actual: actual,
-          expected: expectedSubstring,
-          showDiff: false,
-          operator: 'strictEqual',
-        }
-      )
+
+      if (!actual.includes(expectedSubstring)) {
+        throw new AssertionError({
+          message: `expected ${inspect(selector)} inner text to include '${expectedSubstring}'`,
+          stackStartFn: assertTextContains,
+        })
+      }
     }
 
-    page.assertChecked = async function (selector) {
+    page.assertChecked = async function assertChecked(selector) {
       let isChecked: boolean | undefined
 
       try {
         isChecked = await getLocator(selector, this).isChecked({ timeout: 2000 })
       } catch (error) {
         if (error.message.includes('Not a checkbox')) {
-          this.assert.incrementAssertionsCount()
-          this.assert.evaluate(false, 'expected #{this} to be a checkbox', {
-            thisObject: selector,
-            actual: '',
-            expected: '',
-            showDiff: false,
-            operator: 'strictEqual',
+          throw new AssertionError({
+            message: `expected ${inspect(selector)} to be a checkbox`,
+            stackStartFn: assertChecked,
           })
-
-          return
         }
 
         throw error
@@ -326,35 +284,25 @@ export const addAssertions = {
       /**
        * Assert only when we are able to locate the checkbox
        */
-      if (isChecked !== undefined) {
-        this.assert.incrementAssertionsCount()
-        this.assert.evaluate(isChecked, 'expected #{this} checkbox to be checked', {
-          thisObject: selector,
-          actual: '',
-          expected: '',
-          showDiff: false,
-          operator: 'strictEqual',
+      if (isChecked === false) {
+        throw new AssertionError({
+          message: `expected ${inspect(selector)} checkbox to be checked`,
+          stackStartFn: assertChecked,
         })
       }
     }
 
-    page.assertNotChecked = async function (selector) {
+    page.assertNotChecked = async function assertNotChecked(selector) {
       let isChecked: boolean | undefined
 
       try {
         isChecked = await getLocator(selector, this).isChecked({ timeout: 2000 })
       } catch (error) {
         if (error.message.includes('Not a checkbox')) {
-          this.assert.incrementAssertionsCount()
-          this.assert.evaluate(false, 'expected #{this} to be a checkbox', {
-            thisObject: selector,
-            actual: '',
-            expected: '',
-            showDiff: false,
-            operator: 'strictEqual',
+          throw new AssertionError({
+            message: `expected ${inspect(selector)} to be a checkbox`,
+            stackStartFn: assertNotChecked,
           })
-
-          return
         }
 
         throw error
@@ -363,86 +311,63 @@ export const addAssertions = {
       /**
        * Assert only when we are able to locate the checkbox
        */
-      if (isChecked !== undefined) {
-        this.assert.incrementAssertionsCount()
-        this.assert.evaluate(!isChecked, 'expected #{this} checkbox to be not checked', {
-          thisObject: selector,
-          actual: '',
-          expected: '',
-          showDiff: false,
-          operator: 'strictEqual',
+      if (isChecked === true) {
+        throw new AssertionError({
+          message: `expected ${inspect(selector)} checkbox to be not checked`,
+          stackStartFn: assertNotChecked,
         })
       }
     }
 
-    page.assertDisabled = async function (selector) {
+    page.assertDisabled = async function assertDisabled(selector) {
       const isDisabled = await getLocator(selector, this).isDisabled({ timeout: 2000 })
 
-      this.assert.incrementAssertionsCount()
-      this.assert.evaluate(isDisabled, 'expected #{this} element to be disabled', {
-        thisObject: selector,
-        actual: '',
-        expected: '',
-        showDiff: false,
-        operator: 'strictEqual',
-      })
+      if (!isDisabled) {
+        throw new AssertionError({
+          message: `expected ${inspect(selector)} element to be disabled`,
+          stackStartFn: assertDisabled,
+        })
+      }
     }
 
-    page.assertNotDisabled = async function (selector) {
+    page.assertNotDisabled = async function assertNotDisabled(selector) {
       const isDisabled = await getLocator(selector, this).isDisabled({ timeout: 2000 })
 
-      this.assert.incrementAssertionsCount()
-      this.assert.evaluate(!isDisabled, 'expected #{this} element to be not disabled', {
-        thisObject: selector,
-        actual: '',
-        expected: '',
-        showDiff: false,
-        operator: 'strictEqual',
-      })
+      if (isDisabled) {
+        throw new AssertionError({
+          message: `expected ${inspect(selector)} element to be not disabled`,
+          stackStartFn: assertNotDisabled,
+        })
+      }
     }
 
-    page.assertInputValue = async function (selector, expectedValue) {
+    page.assertInputValue = async function assertInputValue(selector, expectedValue) {
       let inputValue: string | undefined
 
       try {
         inputValue = await getLocator(selector, this).inputValue({ timeout: 2000 })
       } catch (error) {
         if (error.message.includes('Node is not')) {
-          this.assert.incrementAssertionsCount()
-          this.assert.evaluate(
-            false,
-            'expected #{this} element to be an input, select or a textarea',
-            {
-              thisObject: selector,
-              actual: inputValue,
-              expected: expectedValue,
-              showDiff: false,
-              operator: 'strictEqual',
-            }
-          )
-          return
+          throw new AssertionError({
+            message: `expected ${inspect(selector)} element to be an input, select or a textarea`,
+            stackStartFn: assertInputValue,
+          })
         }
 
         throw error
       }
 
-      if (inputValue !== undefined) {
-        this.assert.incrementAssertionsCount()
-        this.assert.evaluate(
-          inputValue === String(expectedValue),
-          'expected #{this} value to be equal #{exp}',
-          {
-            thisObject: selector,
-            actual: inputValue,
-            expected: String(expectedValue),
-            showDiff: true,
-            operator: 'strictEqual',
-          }
-        )
+      if (inputValue !== expectedValue) {
+        throw new AssertionError({
+          message: `expected ${inspect(selector)} value to equal '${expectedValue}'`,
+          stackStartFn: assertInputValue,
+          actual: inputValue,
+          expected: expectedValue,
+        })
       }
     }
 
-    page.assertSelectedOptions = async function (selector, expectedValues) {
+    page.assertSelectedOptions = async function assertSelectedOptions(selector, expectedValues) {
       const element = await this.$eval(selector, (node) => {
         /* c8 ignore start */
         if (node.nodeName === 'SELECT') {
@@ -461,16 +386,10 @@ export const addAssertions = {
        * Not a select box
        */
       if (!element) {
-        this.assert.incrementAssertionsCount()
-        this.assert.evaluate(false, 'expected #{this} element to be a select box', {
-          thisObject: selector,
-          actual: '',
-          expected: '',
-          showDiff: false,
-          operator: 'strictEqual',
+        throw new AssertionError({
+          message: `expected ${inspect(selector)} element to be a select box`,
+          stackStartFn: assertSelectedOptions,
         })
-
-        return
       }
 
       /**
@@ -478,20 +397,27 @@ export const addAssertions = {
        * select boxes
        */
       if (element.multiple) {
-        this.assert.sameMembers(element.selected, expectedValues)
+        element.selected.forEach((elem) => {
+          if (!expectedValues.includes(elem)) {
+            throw new AssertionError({
+              message: `expected ${inspect(selector)} value to deeply equal ${inspect(
+                expectedValues
+              )}`,
+              stackStartFn: assertSelectedOptions,
+              actual: element.selected,
+              expected: expectedValues,
+            })
+          }
+        })
       } else {
-        this.assert.incrementAssertionsCount()
-        this.assert.evaluate(
-          element.selected[0] === expectedValues[0],
-          'expected #{this} value to equal #{exp}',
-          {
-            thisObject: selector,
+        if (element.selected[0] !== expectedValues[0]) {
+          throw new AssertionError({
+            message: `expected ${inspect(selector)} value to equal ${inspect(expectedValues)}`,
+            stackStartFn: assertSelectedOptions,
             actual: element.selected[0],
             expected: expectedValues[0],
-            showDiff: true,
-            operator: 'strictEqual',
-          }
-        )
+          })
+        }
       }
     }
   },

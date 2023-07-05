@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import { decoratePage } from './page.js'
-import type { Decorator } from './types.js'
+import { decoratePage } from './decorate_page.js'
+import type { Decorator } from './types/main.js'
 import type { BrowserContext } from 'playwright'
 
 /**

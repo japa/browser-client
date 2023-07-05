@@ -12,14 +12,14 @@ import { test } from '@japa/runner'
 import { chromium } from 'playwright'
 
 import { addPauseMethods } from '../../src/decorators/pause.js'
+import { decorateBrowser } from '../../index.js'
 
 test.group('Page | pauseIf', () => {
   test('pause if condition is true', async ({ assert, cleanup }) => {
-    const browser = await chromium.launch()
+    const browser = decorateBrowser(await chromium.launch(), [addPauseMethods])
     cleanup(() => browser.close())
 
     const page = await browser.newPage()
-    addPauseMethods.page(page)
 
     const pause = sinon.spy(page, 'pause')
     await page.pauseIf(true)
@@ -28,11 +28,10 @@ test.group('Page | pauseIf', () => {
   })
 
   test('do not pause if condition is false', async ({ assert, cleanup }) => {
-    const browser = await chromium.launch()
+    const browser = decorateBrowser(await chromium.launch(), [addPauseMethods])
     cleanup(() => browser.close())
 
     const page = await browser.newPage()
-    addPauseMethods.page(page)
 
     const pause = sinon.spy(page, 'pause')
     await page.pauseIf(false)
@@ -43,11 +42,10 @@ test.group('Page | pauseIf', () => {
 
 test.group('Page | pauseUnless', () => {
   test('pause if condition is false', async ({ assert, cleanup }) => {
-    const browser = await chromium.launch()
+    const browser = decorateBrowser(await chromium.launch(), [addPauseMethods])
     cleanup(() => browser.close())
 
     const page = await browser.newPage()
-    addPauseMethods.page(page)
 
     const pause = sinon.spy(page, 'pause')
     await page.pauseUnless(false)
@@ -56,11 +54,10 @@ test.group('Page | pauseUnless', () => {
   })
 
   test('do not pause if condition is true', async ({ assert, cleanup }) => {
-    const browser = await chromium.launch()
+    const browser = decorateBrowser(await chromium.launch(), [addPauseMethods])
     cleanup(() => browser.close())
 
     const page = await browser.newPage()
-    addPauseMethods.page(page)
 
     const pause = sinon.spy(page, 'pause')
     await page.pauseUnless(true)

@@ -8,17 +8,17 @@
  */
 
 import fs from 'fs-extra'
-import type { BrowserContext, Browser as PlayWrightBrowser } from 'playwright'
-import { PluginFn } from '@japa/runner/types'
 import { Suite } from '@japa/runner/core'
+import { PluginFn } from '@japa/runner/types'
+import type { BrowserContext, Browser as PlayWrightBrowser } from 'playwright'
 
 import debug from '../debug.js'
-import type { PluginConfig } from '../types.js'
-import { decorateBrowser } from '../browser.js'
 import { traceActions } from './trace_actions.js'
+import type { PluginConfig } from '../types/main.js'
 import { normalizeConfig } from './normalize_config.js'
+import { decorateBrowser } from '../decorate_browser.js'
 import { getLauncherOptions } from './get_launcher_options.js'
-import { decoratorsCollection } from '../decorators_collection.js'
+import { decoratorsCollection } from '../decorators/collection.js'
 import { createContext, createFakeContext } from './create_context.js'
 
 /**

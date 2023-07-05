@@ -10,22 +10,14 @@
 import { test } from '@japa/runner'
 import { chromium } from 'playwright'
 
-import { BasePage } from '../src/base_page.js'
-import { decorateBrowser } from '../src/browser.js'
+import { BasePage } from '../src/base/base_page.js'
 import { ServerFactory } from '../factories/server.js'
 import { addUseMethod } from '../src/decorators/use.js'
 import { addVisitMethod } from '../src/decorators/visit.js'
-import { BaseInteraction } from '../src/base_interaction.js'
+import { decorateBrowser } from '../src/decorate_browser.js'
+import { BaseInteraction } from '../src/base/base_interaction.js'
 
 test.group('Interaction', () => {
-  test('assert interaction name', async ({ assert }) => {
-    class FormInteraction extends BaseInteraction {}
-    assert.equal(
-      Object.prototype.toString.call(new FormInteraction({} as any, {} as any)),
-      '[object Promise]'
-    )
-  })
-
   test('use interaction to run async actions', async ({ assert, cleanup }) => {
     const server = new ServerFactory()
     await server.create((_, res) => {
@@ -68,7 +60,7 @@ test.group('Interaction', () => {
 
     const context = await browser.newContext()
     const page = await context.visit(HomePage)
-    await page.form.checkTerms().assertIsChecked()
+    await page.form.checkTerms().assertIsChecked().exec()
   })
 
   test('mount interaction to an existing page', async ({ assert, cleanup }) => {
@@ -108,7 +100,7 @@ test.group('Interaction', () => {
 
     const context = await browser.newContext()
     const page = await context.visit(server.url)
-    await page.use(FormInteraction).checkTerms().assertIsChecked()
+    await page.use(FormInteraction).checkTerms().assertIsChecked().exec()
   })
 
   test('handle interaction failures', async ({ assert, cleanup }, done) => {
@@ -149,6 +141,7 @@ test.group('Interaction', () => {
       .use(FormInteraction)
       .checkTerms()
       .assertIsChecked()
+      .exec()
       .catch((error) => {
         assert.match(error.message, /locator.check: Timeout 100ms/)
         done()
@@ -194,6 +187,7 @@ test.group('Interaction', () => {
       .use(FormInteraction)
       .checkTerms()
       .assertIsChecked()
+      .exec()
       .finally(() => {
         done()
       })
