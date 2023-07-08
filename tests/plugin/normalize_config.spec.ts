@@ -7,6 +7,7 @@
  * file that was distributed with this source code.
  */
 
+import { join } from 'node:path'
 import { test } from '@japa/runner'
 import { normalizeConfig } from '../../src/plugin/normalize_config.js'
 
@@ -46,7 +47,7 @@ test.group('Nornalize config', () => {
       enabled: true,
       event: 'onError',
       cleanOutputDirectory: true,
-      outputDirectory: './',
+      outputDirectory: join(process.cwd(), './'),
     })
   })
 
