@@ -7,6 +7,7 @@
  * file that was distributed with this source code.
  */
 
+import { join } from 'node:path'
 import type { CLIArgs } from '@japa/runner/types'
 import { chromium, firefox, webkit } from 'playwright'
 
@@ -38,7 +39,7 @@ export function normalizeConfig(cliArgs: CLIArgs, config: PluginConfig) {
   if (tracingEvent) {
     config.tracing = Object.assign(
       config.tracing || {
-        outputDirectory: './',
+        outputDirectory: join(process.cwd(), './'),
         cleanOutputDirectory: true,
       },
       {
