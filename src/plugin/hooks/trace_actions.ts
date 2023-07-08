@@ -62,13 +62,10 @@ export async function traceActionsHook(
 }
 
 /**
- * Suite hook to clean traces output directory after suite
- * tests are over
+ * Suite hook to clean traces output directory
  */
 export async function cleanTracesHook(suite: Suite, outputDirectory: string) {
-  return async () => {
-    const suiteDirectory = join(outputDirectory, suite.name)
-    debug('removing traces output from %s location', suiteDirectory)
-    await unlink(suiteDirectory)
-  }
+  const suiteDirectory = join(outputDirectory, suite.name)
+  debug('removing traces output from %s location', suiteDirectory)
+  await unlink(suiteDirectory)
 }
