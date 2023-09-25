@@ -24,5 +24,8 @@ export class BasePage {
    * Options to pass to the visit method
    */
   declare visitOptions: VisitOptions
-  constructor(public page: Page, public context: BrowserContext) {}
+  constructor(
+    public page: Page,
+    public context: BrowserContext
+  ) {}
 }

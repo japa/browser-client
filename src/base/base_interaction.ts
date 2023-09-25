@@ -19,7 +19,10 @@ import type { Page, BrowserContext } from 'playwright'
 export class BaseInteraction {
   #queue: Set<() => Promise<any>> = new Set()
 
-  constructor(public page: Page, public context: BrowserContext) {}
+  constructor(
+    public page: Page,
+    public context: BrowserContext
+  ) {}
 
   /**
    * Queue an action to the interaction queue
