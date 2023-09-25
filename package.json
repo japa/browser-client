@@ -63,9 +63,9 @@
     "qs": "^6.11.2"
   },
   "peerDependencies": {
-    "@japa/assert": "^2.0.0-1",
-    "@japa/runner": "^3.0.0-1",
-    "playwright": "^1.35.1"
+    "@japa/assert": "^2.0.0-2",
+    "@japa/runner": "^3.0.0-8",
+    "playwright": "^1.38.1"
   },
   "author": "virk,japa",
   "license": "MIT",
