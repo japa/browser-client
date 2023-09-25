@@ -8,7 +8,7 @@
  */
 
 import { join } from 'node:path'
-import { unlink } from 'node:fs/promises'
+import { rm } from 'node:fs/promises'
 import slugify from '@sindresorhus/slugify'
 import type { Suite, Test } from '@japa/runner/core'
 
@@ -67,5 +67,5 @@ export async function traceActionsHook(
 export async function cleanTracesHook(suite: Suite, outputDirectory: string) {
   const suiteDirectory = join(outputDirectory, suite.name)
   debug('removing traces output from %s location', suiteDirectory)
-  await unlink(suiteDirectory)
+  await rm(suiteDirectory, { recursive: true, force: true, maxRetries: 4 })
 }

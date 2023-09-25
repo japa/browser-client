@@ -8,8 +8,8 @@
  */
 
 import { chromium } from 'playwright'
-import { Test, Emitter, Refiner, TestContext } from '@japa/runner/core'
 import { test } from '@japa/runner'
+import { Test, Emitter, Refiner, TestContext } from '@japa/runner/core'
 
 import { decorateBrowser } from '../../index.js'
 import { addVisitMethod } from '../../src/decorators/visit.js'
