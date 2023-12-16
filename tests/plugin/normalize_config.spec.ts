@@ -11,7 +11,7 @@ import { join } from 'node:path'
 import { test } from '@japa/runner'
 import { normalizeConfig } from '../../src/plugin/normalize_config.js'
 
-test.group('Nornalize config', () => {
+test.group('Normalize config', () => {
   test('launch chromium browser', async ({ assert, cleanup }) => {
     const browser = await normalizeConfig({}, {}).launcher({})
 

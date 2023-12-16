@@ -371,7 +371,7 @@ export const addAssertions = {
       const element = await this.$eval(selector, (node) => {
         /* c8 ignore start */
         if (node.nodeName === 'SELECT') {
-          const options = new Array(...node.options)
+          const options = [...node.options]
           return {
             multiple: node.multiple,
             selected: options
