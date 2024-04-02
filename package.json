@@ -1,7 +1,7 @@
 {
   "name": "@japa/browser-client",
   "description": "Browser client built on top of Playwright for writing end to end tests",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "engines": {
     "node": ">=18.16.0"
   },
