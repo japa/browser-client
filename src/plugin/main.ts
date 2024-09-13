@@ -59,7 +59,8 @@ export function browserClient(config: PluginConfig) {
           debug('initiating browser for suite "%s"', suite.name)
           browser = decorateBrowser(
             await normalizedConfig.launcher(launcherOptions),
-            decoratorsCollection.toList()
+            decoratorsCollection.toList(),
+            config
           )
 
           return () => {

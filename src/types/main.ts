@@ -23,7 +23,7 @@ import type {
  * directly
  */
 export type Decorator = {
-  page?: (page: Page, context: BrowserContext) => void
+  page?: (page: Page, context: BrowserContext, config: PluginConfig) => void
   context?: (context: BrowserContext) => void
   response?: (response: Response) => void
 }

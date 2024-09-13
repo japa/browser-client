@@ -7,16 +7,21 @@
  * file that was distributed with this source code.
  */
 
-import { Decorator } from './types/main.js'
+import { Decorator, PluginConfig } from './types/main.js'
 import type { BrowserContext, Page } from 'playwright'
 
 /**
  * Decorates the playwright page object
  */
-export function decoratePage(page: Page, context: BrowserContext, decorators: Decorator[]): Page {
+export function decoratePage(
+  page: Page,
+  context: BrowserContext,
+  decorators: Decorator[],
+  config: PluginConfig
+): Page {
   decorators.forEach((decorator) => {
     if (decorator.page) {
-      decorator.page(page, context)
+      decorator.page(page, context, config)
     }
   })
 
