@@ -23,6 +23,14 @@ const DEFAULT_LAUNCHERS: Record<string, PluginConfig['launcher']> = {
 }
 
 /**
+ * Default configuration for assertions added to `page`
+ */
+export const DEFAULT_ASSERTIONS_CONFIG: Required<NonNullable<PluginConfig['assertions']>> = {
+  timeout: 5000,
+  pollIntervals: [100, 250, 500, 1000],
+}
+
+/**
  * Normalizes the user defined config
  */
 export function normalizeConfig(cliArgs: CLIArgs, config: PluginConfig) {

@@ -53,6 +53,14 @@ export type PluginConfig = {
   contextOptions?: BrowserContextOptions
 
   /**
+   * Options for built-in assertions
+   */
+  assertions?: {
+    timeout?: number
+    pollIntervals?: number[]
+  }
+
+  /**
    * Lazily launch a browser.
    */
   launcher?: (config: Pick<LaunchOptions, 'headless' | 'slowMo' | 'devtools'>) => Promise<Browser>
