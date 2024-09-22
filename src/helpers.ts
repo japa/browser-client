@@ -105,21 +105,3 @@ export async function retryTest(
     throw error
   }
 }
-
-/**
- * Creates markup for a basic HTML document (to avoid repetition in tests)
- */
-export const basicDocument = ({
-  title = 'Hello world',
-  body = '',
-}: { title?: string; body?: string } = {}) => {
-  return `
-  <html>
-    <head>
-      <title>${title}</title>
-    </head>
-    <body>
-      ${body}
-    </body>
-  </html>`
-}

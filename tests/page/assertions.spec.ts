@@ -14,7 +14,7 @@ import { decorateBrowser } from '../../index.js'
 import { ServerFactory } from '../../factories/server.js'
 import { addAssertions } from '../../src/decorators/assertions.js'
 import type { PluginConfig } from '../../src/types/main.js'
-import { basicDocument } from '../../src/helpers.js'
+import { basicDocument } from '../helpers.js'
 
 test.group('Assertions', () => {
   // Use short timeout for expect in order to speed up tests for failing assertions
