@@ -50,7 +50,7 @@ test.group('Helpers', () => {
             throw new Error('Expected error')
           }
         ),
-      /Expected error/
+      /Expected error, timed out after 100ms/
     )
     const endTime = new Date()
 
@@ -77,7 +77,7 @@ test.group('Helpers', () => {
             throw new Error('Expected error')
           }
         ),
-      /Expected error/
+      /Expected error, timed out after 500ms/
     )
 
     const endTime = new Date()

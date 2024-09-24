@@ -93,7 +93,7 @@ export async function retryTest(
         return { error: new Error('retryTest: Callback ran out of time') }
       } else {
         // Otherwise lets wait for the last attempt to finish cleanly
-        await lastAttemptCallback
+        await lastAttemptCallback.catch((e) => (lastError = e))
         return { error: lastError }
       }
     })
