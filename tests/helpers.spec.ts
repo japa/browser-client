@@ -35,7 +35,6 @@ test.group('Helpers', () => {
   })
 
   test('retryTest fails when not successful before end of timeout', async ({ assert }) => {
-    const attemptTimes: Date[] = []
     const startTime = new Date()
 
     await assert.rejects(
@@ -46,7 +45,6 @@ test.group('Helpers', () => {
             pollIntervals: [20],
           },
           async () => {
-            attemptTimes.push(new Date())
             throw new Error('Expected error')
           }
         ),
