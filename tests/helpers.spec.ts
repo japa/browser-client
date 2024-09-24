@@ -7,6 +7,8 @@
  * file that was distributed with this source code.
  */
 
+import { setTimeout } from 'node:timers/promises'
+
 import { test } from '@japa/runner'
 import { retryTest } from '../src/helpers.js'
 
@@ -49,6 +51,31 @@ test.group('Helpers', () => {
           }
         ),
       /Expected error, timed out after 100ms/
+    )
+    const endTime = new Date()
+
+    const actualTimeout = endTime.getTime() - startTime.getTime()
+    const allowedDeviation = 50
+
+    assert.isAtLeast(actualTimeout, 100 - allowedDeviation)
+    assert.isAtMost(actualTimeout, 100 + allowedDeviation)
+  })
+
+  test('retryTest fails when callback does not finish before timeout', async ({ assert }) => {
+    const startTime = new Date()
+
+    await assert.rejects(
+      () =>
+        retryTest(
+          {
+            timeout: 100,
+            pollIntervals: [20],
+          },
+          async () => {
+            await setTimeout(200)
+          }
+        ),
+      /retryTest: Callback ran out of time, timed out after 100ms/
     )
     const endTime = new Date()
 
