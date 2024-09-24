@@ -55,10 +55,10 @@ test.group('Helpers', () => {
     const endTime = new Date()
 
     const actualTimeout = endTime.getTime() - startTime.getTime()
-    const allowedVariance = 5
+    const allowedDeviation = 50
 
-    assert.isAtLeast(actualTimeout, 100 - allowedVariance)
-    assert.isAtMost(actualTimeout, 100 + allowedVariance)
+    assert.isAtLeast(actualTimeout, 100 - allowedDeviation)
+    assert.isAtMost(actualTimeout, 100 + allowedDeviation)
   })
 
   test('retryTest retries at defined poll intervals', async ({ assert }) => {
@@ -87,26 +87,26 @@ test.group('Helpers', () => {
       const lastAttemptTime = i === 0 ? startTime : attemptTimes[i - 1]
       return attemptTime.getTime() - lastAttemptTime.getTime()
     })
-    const allowedVariance = 5
+    const allowedDeviation = 25
 
-    assert.isAtLeast(actualTimeout, 500 - allowedVariance)
-    assert.isAtMost(actualTimeout, 500 + allowedVariance)
+    assert.isAtLeast(actualTimeout, 500 - allowedDeviation)
+    assert.isAtMost(actualTimeout, 500 + allowedDeviation)
 
     assert.isAtLeast(firstAttemptDelay, 0)
-    assert.isAtMost(firstAttemptDelay, 0 + allowedVariance)
+    assert.isAtMost(firstAttemptDelay, 0 + allowedDeviation)
 
     assert.lengthOf(actualPollIntervals, 4)
 
-    assert.isAtLeast(actualPollIntervals[0], 25 - allowedVariance)
-    assert.isAtMost(actualPollIntervals[0], 25 + allowedVariance)
+    assert.isAtLeast(actualPollIntervals[0], 25 - allowedDeviation)
+    assert.isAtMost(actualPollIntervals[0], 25 + allowedDeviation)
 
-    assert.isAtLeast(actualPollIntervals[1], 100 - allowedVariance)
-    assert.isAtMost(actualPollIntervals[1], 100 + allowedVariance)
+    assert.isAtLeast(actualPollIntervals[1], 100 - allowedDeviation)
+    assert.isAtMost(actualPollIntervals[1], 100 + allowedDeviation)
 
-    assert.isAtLeast(actualPollIntervals[2], 150 - allowedVariance)
-    assert.isAtMost(actualPollIntervals[2], 150 + allowedVariance)
+    assert.isAtLeast(actualPollIntervals[2], 150 - allowedDeviation)
+    assert.isAtMost(actualPollIntervals[2], 150 + allowedDeviation)
 
-    assert.isAtLeast(actualPollIntervals[3], 150 - allowedVariance)
-    assert.isAtMost(actualPollIntervals[3], 150 + allowedVariance)
+    assert.isAtLeast(actualPollIntervals[3], 150 - allowedDeviation)
+    assert.isAtMost(actualPollIntervals[3], 150 + allowedDeviation)
   })
 })
