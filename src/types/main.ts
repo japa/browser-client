@@ -23,7 +23,7 @@ import type {
  * directly
  */
 export type Decorator = {
-  page?: (page: Page, context: BrowserContext) => void
+  page?: (page: Page, context: BrowserContext, config: PluginConfig) => void
   context?: (context: BrowserContext) => void
   response?: (response: Response) => void
 }
@@ -51,6 +51,14 @@ export type PluginConfig = {
    * Options for the context created for every test
    */
   contextOptions?: BrowserContextOptions
+
+  /**
+   * Options for built-in assertions
+   */
+  assertions?: {
+    timeout?: number
+    pollIntervals?: number[]
+  }
 
   /**
    * Lazily launch a browser.
