@@ -7,13 +7,13 @@
  * file that was distributed with this source code.
  */
 
-import qs from 'qs'
+import qs from '@poppinss/qs'
 import { inspect } from 'node:util'
 import { AssertionError } from 'node:assert'
 import type { Locator, Page } from 'playwright'
 import type { Decorator } from '../types/main.js'
-import { DEFAULT_ASSERTIONS_CONFIG } from '../plugin/normalize_config.js'
 import { isSubsetOf, retryTest } from '../helpers.js'
+import { DEFAULT_ASSERTIONS_CONFIG } from '../plugin/normalize_config.js'
 
 /**
  * Returns locator for a selector

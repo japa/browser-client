@@ -7,9 +7,10 @@
  * file that was distributed with this source code.
  */
 
+import type { BrowserContext } from 'playwright'
+
 import { decoratePage } from './decorate_page.js'
 import type { Decorator, PluginConfig } from './types/main.js'
-import type { BrowserContext } from 'playwright'
 
 /**
  * Decorates the playwright browser context

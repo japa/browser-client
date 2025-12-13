@@ -7,10 +7,11 @@
  * file that was distributed with this source code.
  */
 
-import { decoratePage } from './decorate_page.js'
-import type { Decorator, PluginConfig } from './types/main.js'
-import { decorateContext } from './decorate_context.js'
 import type { Browser as PlayWrightBrowser, BrowserContextOptions } from 'playwright'
+
+import { decoratePage } from './decorate_page.js'
+import { decorateContext } from './decorate_context.js'
+import type { Decorator, PluginConfig } from './types/main.js'
 
 /**
  * Decorates the browser by re-writing "newContext" and "newPage"
