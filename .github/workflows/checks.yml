@@ -11,7 +11,7 @@ jobs:
       install-playwright-browsers: true
 
   lint:
-    uses: japa/.github/.github/workflows/lint.yml@main
+    uses: japa/.github/.github/workflows/lint.yml@next
 
   typecheck:
-    uses: japa/.github/.github/workflows/typecheck.yml@main
+    uses: japa/.github/.github/workflows/typecheck.yml@next
