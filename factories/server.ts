@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { createServer, IncomingMessage, Server, ServerResponse } from 'node:http'
+import { createServer, type IncomingMessage, type Server, type ServerResponse } from 'node:http'
 
 export class ServerFactory {
   host: string = 'localhost'

@@ -8,7 +8,7 @@
  */
 
 import type { BrowserContext, Page } from 'playwright'
-import { Decorator, PluginConfig } from './types/main.js'
+import { type Decorator, type PluginConfig } from './types/main.js'
 
 /**
  * Decorates the playwright page object

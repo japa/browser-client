@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import { Suite } from '@japa/runner/core'
-import { PluginFn } from '@japa/runner/types'
+import { type Suite } from '@japa/runner/core'
+import { type PluginFn } from '@japa/runner/types'
 import type { Browser as PlayWrightBrowser } from 'playwright'
 
 import debug from '../debug.js'
