@@ -61,12 +61,8 @@ export async function createContextHook(
      * Recorder code is taken from
      * https://github.com/microsoft/playwright/blob/24365d66eb47e307ff4253b62340a80fc957b53d/packages/playwright-core/src/cli/program.ts#L558
      */
-    const recorder = (this.browserContext as any)._enableRecorder.bind(context)
+    const recorder = (this.browserContext as any)._enableRecorder.bind(this.browserContext)
     await recorder({
-      contextOptions: {
-        baseURL: host && port ? `http://${host}:${port}` : undefined,
-        ...config.contextOptions,
-      },
       mode: 'recording',
       handleSIGINT: false,
     })
