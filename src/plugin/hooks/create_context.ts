@@ -7,12 +7,12 @@
  * file that was distributed with this source code.
  */
 
-import type { Test } from '@japa/runner/core'
-import type { Browser as PlayWrightBrowser } from 'playwright'
+import type { Test, TestContext } from '@japa/runner/core'
+import type { Page, Browser as PlayWrightBrowser } from 'playwright'
 
 import debug from '../../debug.js'
-import type { PluginConfig } from '../../types/main.js'
 import { BrowserContextProxy, BrowserProxy } from '../proxies.js'
+import type { PluginConfig, VisitOptions } from '../../types/main.js'
 
 /**
  * Test hook to create a fresh browser context for each
@@ -39,6 +39,46 @@ export async function createContextHook(
   })
 
   context.visit = context.browserContext.visit.bind(context.browserContext)
+  context.record = async function (
+    this: TestContext,
+    urlOrCallback: string | (() => Promise<Page>),
+    options?: VisitOptions
+  ) {
+    /**
+     * Recorder code is taken from
+     * https://github.com/microsoft/playwright/blob/24365d66eb47e307ff4253b62340a80fc957b53d/packages/playwright-core/src/cli/program.ts#L558
+     */
+    const recorder = (this.browserContext as any)._enableRecorder.bind(context)
+    await recorder({
+      contextOptions: {
+        baseURL: host && port ? `http://${host}:${port}` : undefined,
+        ...config.contextOptions,
+      },
+      mode: 'recording',
+      handleSIGINT: false,
+    })
+
+    const page =
+      typeof urlOrCallback === 'function'
+        ? await urlOrCallback()
+        : await this.visit(urlOrCallback, options)
+
+    /**
+     * Headless chrome doesn't close on page close, hence we have
+     * to listen for page close and explicitly close the browser
+     */
+    page.on('close', async () => {
+      await this.browserContext.close()
+      await this.browser.close()
+    })
+
+    /**
+     * Wait until the browser is disconnected
+     */
+    return new Promise<void>((resolve) => {
+      this.browser.on('disconnected', () => resolve())
+    })
+  }.bind(context)
 
   return () => {
     debug('closing browser context for test "%s"', context.test.title)

@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import type { Locator } from 'playwright'
+import type { Locator, Page } from 'playwright'
 
 import type { VisitOptions } from './main.js'
 import type { BasePage } from '../base/base_page.js'
@@ -225,5 +225,8 @@ declare module '@japa/runner/core' {
      * Opens a new page and visit the URL
      */
     visit: BrowserContext['visit']
+
+    record(url: string, options?: VisitOptions): Promise<void>
+    record(callback: () => Promise<Page>): Promise<void>
   }
 }
