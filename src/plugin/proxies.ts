@@ -8,8 +8,21 @@
  */
 
 /**
- * A proxy instance to raise meaningful error when browser
- * is accessed from a suite that is not running a browser.
+ * A proxy instance that raises a meaningful error when the browser
+ * is accessed from a suite that is not configured to run a browser.
+ *
+ * This helps developers identify when they're trying to use browser
+ * functionality in tests that don't have browser access.
+ *
+ * @param suite - The name of the suite attempting to access the browser
+ *
+ * @example
+ * ```ts
+ * // In a suite not configured for browser tests
+ * test('my test', ({ browser }) => {
+ *   browser.newPage() // Throws: Cannot access "browser.newPage"...
+ * })
+ * ```
  */
 export class BrowserProxy {
   constructor(suite: string) {
@@ -26,8 +39,21 @@ export class BrowserProxy {
 }
 
 /**
- * A proxy instance to raise meaningful error when browser context
- * is accessed from a suite that is not running a browser.
+ * A proxy instance that raises a meaningful error when the browser context
+ * is accessed from a suite that is not configured to run a browser.
+ *
+ * This helps developers identify when they're trying to use browser context
+ * functionality in tests that don't have browser access.
+ *
+ * @param suite - The name of the suite attempting to access the browser context
+ *
+ * @example
+ * ```ts
+ * // In a suite not configured for browser tests
+ * test('my test', ({ browserContext }) => {
+ *   browserContext.newPage() // Throws: Cannot access "browserContext.newPage"...
+ * })
+ * ```
  */
 export class BrowserContextProxy {
   constructor(suite: string) {

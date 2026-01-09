@@ -9,4 +9,13 @@
 
 import { debuglog } from 'node:util'
 
+/**
+ * Debug logger for the browser-client plugin. To enable debug logs,
+ * set the NODE_DEBUG environment variable to "japa:browser-client".
+ *
+ * @example
+ * ```bash
+ * NODE_DEBUG=japa:browser-client node ace test
+ * ```
+ */
 export default debuglog('japa:browser-client')

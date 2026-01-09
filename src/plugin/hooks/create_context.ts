@@ -15,8 +15,21 @@ import { BrowserContextProxy, BrowserProxy } from '../proxies.js'
 import type { PluginConfig, VisitOptions } from '../../types/main.js'
 
 /**
- * Test hook to create a fresh browser context for each
- * test
+ * Test setup hook that creates a fresh browser context for each test.
+ * This ensures test isolation by providing a clean browser state.
+ *
+ * The hook adds `browser`, `browserContext`, `visit`, and `record` methods
+ * to the test context.
+ *
+ * @param browser - The Playwright browser instance
+ * @param config - Plugin configuration
+ * @param test - The test instance
+ *
+ * @example
+ * ```ts
+ * // Used internally by the plugin
+ * test.setup((self) => createContextHook(browser, config, self))
+ * ```
  */
 export async function createContextHook(
   browser: PlayWrightBrowser,
@@ -87,8 +100,19 @@ export async function createContextHook(
 }
 
 /**
- * Test hook to create a fake browser context for tests that are
- * not configured to interact with browsers
+ * Test setup hook that creates fake browser and context objects for tests
+ * in suites that are not configured to interact with browsers.
+ *
+ * These proxies throw helpful error messages if accessed, guiding developers
+ * to configure the plugin for the suite.
+ *
+ * @param test - The test instance
+ *
+ * @example
+ * ```ts
+ * // Used internally by the plugin for non-browser suites
+ * test.setup((self) => createFakeContextHook(self))
+ * ```
  */
 export function createFakeContextHook(test: Test) {
   const suiteName = test.options.meta.suite.name

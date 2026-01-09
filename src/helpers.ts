@@ -10,7 +10,18 @@
 import { setTimeout } from 'node:timers/promises'
 
 /**
- * Checks if one object is a subset of an another object
+ * Checks if one object is a subset of another object. This function
+ * performs a deep comparison for nested objects.
+ *
+ * @param superset - The object that should contain all properties from the subset
+ * @param subset - The object to check if it's contained within the superset
+ *
+ * @example
+ * ```ts
+ * isSubsetOf({ a: 1, b: 2 }, { a: 1 }) // true
+ * isSubsetOf({ a: 1 }, { a: 1, b: 2 }) // false
+ * isSubsetOf({ user: { name: 'John', age: 30 } }, { user: { name: 'John' } }) // true
+ * ```
  */
 export const isSubsetOf = (superset: Record<string, any>, subset: Record<string, any>): boolean => {
   if (
@@ -41,9 +52,29 @@ export const isSubsetOf = (superset: Record<string, any>, subset: Record<string,
 }
 
 /**
- * Retries async function until an invocation of the callback does not throw any error or the time
- * runs out.
- * If the time runs out, the last thrown error will be re-thrown
+ * Retries an async function until an invocation of the callback does not throw
+ * any error or the timeout is reached. If the time runs out, the last thrown
+ * error will be re-thrown.
+ *
+ * This is used internally by assertion methods to provide automatic retries.
+ *
+ * @param options - Configuration object
+ * @param options.pollIntervals - Array of intervals (in ms) to wait between retries
+ * @param options.timeout - Maximum time (in ms) to keep retrying
+ * @param callback - The async function to retry
+ *
+ * @example
+ * ```ts
+ * await retryTest(
+ *   { pollIntervals: [100, 250, 500], timeout: 5000 },
+ *   async () => {
+ *     const element = await page.locator('.button')
+ *     if (!await element.isVisible()) {
+ *       throw new Error('Element not visible')
+ *     }
+ *   }
+ * )
+ * ```
  */
 export async function retryTest(
   options: {

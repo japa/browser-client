@@ -19,12 +19,29 @@ import type { Decorator } from '../types/main.js'
  *
  * Since, Playwright does not offer any extensible APIs, we have to apply
  * decorators on every instance.
+ *
+ * @example
+ * ```ts
+ * // Register a custom decorator
+ * decoratorsCollection.register({
+ *   page(page) {
+ *     page.customMethod = function() {
+ *       // Custom implementation
+ *     }
+ *   }
+ * })
+ * ```
  */
 class DecoratorsCollection {
+  /**
+   * Internal list of registered decorators
+   */
   #list: Decorator[] = [addAssertions, addPauseMethods, addUseMethod, addVisitMethod]
 
   /**
-   * Register a custom decorator
+   * Register a custom decorator to extend page, context, or response objects
+   *
+   * @param decorator - The decorator to register
    */
   register(decorator: Decorator): this {
     this.#list.push(decorator)
@@ -32,12 +49,15 @@ class DecoratorsCollection {
   }
 
   /**
-   * Returns decorators list
+   * Returns the list of all registered decorators
    */
   toList() {
     return this.#list
   }
 }
 
+/**
+ * Singleton instance of the decorators collection
+ */
 const decoratorsCollection = new DecoratorsCollection()
 export { decoratorsCollection }

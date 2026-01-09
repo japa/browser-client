@@ -16,7 +16,20 @@ import debug from '../../debug.js'
 import type { PluginConfig } from '../../types/main.js'
 
 /**
- * Tests hook to trace actions
+ * Test setup hook that starts Playwright tracing for a test and stops
+ * it based on the configured event ('onError' or 'onTest').
+ *
+ * Traces include screenshots, snapshots, and sources which can be
+ * viewed in Playwright's trace viewer for debugging.
+ *
+ * @param tracingConfig - Tracing configuration from plugin config
+ * @param test - The test instance to trace
+ *
+ * @example
+ * ```ts
+ * // Used internally by the plugin
+ * test.setup((self) => traceActionsHook(tracingConfig, self))
+ * ```
  */
 export async function traceActionsHook(
   tracingConfig: Exclude<PluginConfig['tracing'], undefined>,
@@ -62,7 +75,17 @@ export async function traceActionsHook(
 }
 
 /**
- * Suite hook to clean traces output directory
+ * Suite setup hook that cleans the traces output directory before
+ * running tests in the suite.
+ *
+ * @param suite - The test suite instance
+ * @param outputDirectory - The base directory for trace output
+ *
+ * @example
+ * ```ts
+ * // Used internally by the plugin
+ * suite.setup(() => cleanTracesHook(suite, './traces'))
+ * ```
  */
 export async function cleanTracesHook(suite: Suite, outputDirectory: string) {
   const suiteDirectory = join(outputDirectory, suite.name)

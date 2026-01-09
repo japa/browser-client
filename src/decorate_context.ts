@@ -13,7 +13,21 @@ import { decoratePage } from './decorate_page.js'
 import type { Decorator, PluginConfig } from './types/main.js'
 
 /**
- * Decorates the playwright browser context
+ * Decorates the Playwright browser context by applying custom decorators
+ * and setting up automatic decoration for all pages created within the context.
+ *
+ * @param context - The Playwright browser context to decorate
+ * @param decorators - Array of decorators to apply
+ * @param config - Plugin configuration options
+ *
+ * @example
+ * ```ts
+ * const decoratedContext = decorateContext(
+ *   context,
+ *   [addAssertions, addVisitMethod],
+ *   { assertions: { timeout: 5000 } }
+ * )
+ * ```
  */
 export function decorateContext(
   context: BrowserContext,

@@ -13,7 +13,17 @@ import type { CLIArgs } from '@japa/runner/types'
 import debug from '../debug.js'
 
 /**
- * Creates launcher options from the tests runner config
+ * Creates Playwright launcher options from the test runner CLI arguments.
+ * Supports flags like --headed, --slow, and --devtools.
+ *
+ * @param cliArgs - CLI arguments from Japa test runner
+ *
+ * @example
+ * ```ts
+ * // With CLI args: --headed --slow=500 --devtools
+ * const options = getLauncherOptions(cliArgs)
+ * // Returns: { headless: false, slowMo: 500, devtools: true }
+ * ```
  */
 export function getLauncherOptions(cliArgs: CLIArgs): LaunchOptions {
   const options = {

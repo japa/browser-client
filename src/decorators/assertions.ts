@@ -16,19 +16,51 @@ import { isSubsetOf, retryTest } from '../helpers.js'
 import { DEFAULT_ASSERTIONS_CONFIG } from '../plugin/normalize_config.js'
 
 /**
- * Returns locator for a selector
+ * Returns a Playwright locator for a given selector. If a locator is
+ * already provided, it returns it as-is.
+ *
+ * @param selector - A CSS selector string or an existing Locator instance
+ * @param page - The Playwright page instance
  */
 function getLocator(selector: string | Locator, page: Page): Locator {
   return typeof selector === 'string' ? page.locator(selector) : selector
 }
 
 /**
- * Decorates the page object with custom assertions
+ * Decorates the page object with custom assertions for testing browser interactions.
+ * All assertions support automatic retries with configurable timeouts and poll intervals.
+ *
+ * @example
+ * ```ts
+ * // Assert element exists
+ * await page.assertExists('.login-button')
+ *
+ * // Assert page title
+ * await page.assertTitle('Login Page')
+ *
+ * // Assert URL contains substring
+ * await page.assertUrlContains('/dashboard')
+ *
+ * // Assert element text
+ * await page.assertText('h1', 'Welcome')
+ * ```
  */
 export const addAssertions = {
+  /**
+   * Adds assertion methods to the page object
+   *
+   * @param page - The Playwright page instance to decorate
+   * @param _context - The browser context (unused but required by decorator interface)
+   * @param config - Plugin configuration with assertion settings
+   */
   page(page, _context, config) {
     const retrySettings = { ...DEFAULT_ASSERTIONS_CONFIG, ...config?.assertions }
 
+    /**
+     * Asserts that an element matching the selector exists on the page
+     *
+     * @param selector - CSS selector or Locator instance
+     */
     page.assertExists = function assertExists(selector) {
       return retryTest(retrySettings, async () => {
         const matchingCount = await getLocator(selector, this).count()
@@ -42,6 +74,11 @@ export const addAssertions = {
       })
     }
 
+    /**
+     * Asserts that an element matching the selector does not exist on the page
+     *
+     * @param selector - CSS selector or Locator instance
+     */
     page.assertNotExists = function assertNotExists(selector) {
       return retryTest(retrySettings, async () => {
         const matchingCount = await getLocator(selector, this).count()
@@ -55,6 +92,12 @@ export const addAssertions = {
       })
     }
 
+    /**
+     * Asserts that the number of elements matching the selector equals the expected count
+     *
+     * @param selector - CSS selector or Locator instance
+     * @param expectedCount - The expected number of elements
+     */
     page.assertElementsCount = function assertElementsCount(selector, expectedCount) {
       return retryTest(retrySettings, async () => {
         const matchingCount = await getLocator(selector, this).count()
@@ -70,6 +113,11 @@ export const addAssertions = {
       })
     }
 
+    /**
+     * Asserts that an element is visible on the page
+     *
+     * @param selector - CSS selector or Locator instance
+     */
     page.assertVisible = function assertVisible(selector) {
       return retryTest(retrySettings, async () => {
         const isVisible = await getLocator(selector, this).isVisible()
@@ -83,6 +131,11 @@ export const addAssertions = {
       })
     }
 
+    /**
+     * Asserts that an element is not visible on the page
+     *
+     * @param selector - CSS selector or Locator instance
+     */
     page.assertNotVisible = function assertNotVisible(selector) {
       return retryTest(retrySettings, async () => {
         const isVisible = await getLocator(selector, this).isVisible()
@@ -96,6 +149,11 @@ export const addAssertions = {
       })
     }
 
+    /**
+     * Asserts that the page title equals the expected value
+     *
+     * @param expectedTitle - The expected page title
+     */
     page.assertTitle = function assertTitle(expectedTitle) {
       return retryTest(retrySettings, async () => {
         const title = await this.title()
@@ -111,6 +169,11 @@ export const addAssertions = {
       })
     }
 
+    /**
+     * Asserts that the page title contains the expected substring
+     *
+     * @param expectedSubstring - The substring to search for in the title
+     */
     page.assertTitleContains = function assertTitleContains(expectedSubstring) {
       return retryTest(retrySettings, async () => {
         const pageTitle = await this.title()
@@ -124,6 +187,11 @@ export const addAssertions = {
       })
     }
 
+    /**
+     * Asserts that the page URL equals the expected value
+     *
+     * @param expectedUrl - The expected URL
+     */
     page.assertUrl = function assertUrl(expectedUrl) {
       return retryTest(retrySettings, async () => {
         const url = this.url()
@@ -139,6 +207,11 @@ export const addAssertions = {
       })
     }
 
+    /**
+     * Asserts that the page URL contains the expected substring
+     *
+     * @param expectedSubstring - The substring to search for in the URL
+     */
     page.assertUrlContains = function assertUrlContains(expectedSubstring) {
       return retryTest(retrySettings, async () => {
         const pageUrl = this.url()
@@ -152,6 +225,11 @@ export const addAssertions = {
       })
     }
 
+    /**
+     * Asserts that the page URL matches the given regular expression
+     *
+     * @param regex - The regular expression to match against the URL
+     */
     page.assertUrlMatches = function assertUrlMatches(regex) {
       return retryTest(retrySettings, async () => {
         const url = this.url()
@@ -167,6 +245,11 @@ export const addAssertions = {
       })
     }
 
+    /**
+     * Asserts that the page pathname equals the expected value
+     *
+     * @param expectedPathName - The expected pathname
+     */
     page.assertPath = function assertPath(expectedPathName) {
       return retryTest(retrySettings, async () => {
         const { pathname } = new URL(this.url())
@@ -182,6 +265,11 @@ export const addAssertions = {
       })
     }
 
+    /**
+     * Asserts that the page pathname contains the expected substring
+     *
+     * @param expectedSubstring - The substring to search for in the pathname
+     */
     page.assertPathContains = function assertPathContains(expectedSubstring) {
       return retryTest(retrySettings, async () => {
         const { pathname } = new URL(this.url())
@@ -195,6 +283,11 @@ export const addAssertions = {
       })
     }
 
+    /**
+     * Asserts that the page pathname matches the given regular expression
+     *
+     * @param regex - The regular expression to match against the pathname
+     */
     page.assertPathMatches = function assertPathMatches(regex) {
       return retryTest(retrySettings, async () => {
         const { pathname } = new URL(this.url())
@@ -208,6 +301,11 @@ export const addAssertions = {
       })
     }
 
+    /**
+     * Asserts that the page URL query string contains the expected subset of parameters
+     *
+     * @param expectedSubset - Object containing expected query parameters
+     */
     page.assertQueryString = function assertQueryString(expectedSubset) {
       return retryTest(retrySettings, async () => {
         const pageURL = new URL(this.url())
@@ -224,6 +322,12 @@ export const addAssertions = {
       })
     }
 
+    /**
+     * Asserts that a cookie exists and optionally matches the expected value
+     *
+     * @param cookieName - The name of the cookie
+     * @param value - Optional expected value of the cookie
+     */
     page.assertCookie = function assertCookie(cookieName, value?) {
       return retryTest(retrySettings, async () => {
         const pageCookies = await this.context().cookies()
@@ -247,6 +351,11 @@ export const addAssertions = {
       })
     }
 
+    /**
+     * Asserts that a cookie does not exist
+     *
+     * @param cookieName - The name of the cookie
+     */
     page.assertCookieMissing = function assertCookieMissing(cookieName) {
       return retryTest(retrySettings, async () => {
         const pageCookies = await this.context().cookies()
@@ -261,6 +370,12 @@ export const addAssertions = {
       })
     }
 
+    /**
+     * Asserts that the inner text of an element equals the expected value
+     *
+     * @param selector - CSS selector or Locator instance
+     * @param expectedValue - The expected text content
+     */
     page.assertText = function assertText(selector, expectedValue) {
       return retryTest(retrySettings, async () => {
         const actual = await getLocator(selector, this).innerText({ timeout: 2000 })
@@ -275,6 +390,12 @@ export const addAssertions = {
       })
     }
 
+    /**
+     * Asserts that multiple elements' inner text matches the expected values in order
+     *
+     * @param selector - CSS selector or Locator instance
+     * @param expectedValues - Array of expected text values
+     */
     page.assertElementsText = function assertElementsText(selector, expectedValues) {
       return retryTest(retrySettings, async () => {
         const innertTexts = await getLocator(selector, this).allInnerTexts()
@@ -294,6 +415,12 @@ export const addAssertions = {
       })
     }
 
+    /**
+     * Asserts that the inner text of an element contains the expected substring
+     *
+     * @param selector - CSS selector or Locator instance
+     * @param expectedSubstring - The substring to search for
+     */
     page.assertTextContains = function assertTextContains(selector, expectedSubstring) {
       return retryTest(retrySettings, async () => {
         const actual = await getLocator(selector, this).innerText({ timeout: 2000 })
@@ -307,6 +434,11 @@ export const addAssertions = {
       })
     }
 
+    /**
+     * Asserts that a checkbox is checked
+     *
+     * @param selector - CSS selector or Locator instance
+     */
     page.assertChecked = function assertChecked(selector) {
       return retryTest(retrySettings, async () => {
         let isChecked: boolean | undefined
@@ -336,6 +468,11 @@ export const addAssertions = {
       })
     }
 
+    /**
+     * Asserts that a checkbox is not checked
+     *
+     * @param selector - CSS selector or Locator instance
+     */
     page.assertNotChecked = function assertNotChecked(selector) {
       return retryTest(retrySettings, async () => {
         let isChecked: boolean | undefined
@@ -365,6 +502,11 @@ export const addAssertions = {
       })
     }
 
+    /**
+     * Asserts that an element is disabled
+     *
+     * @param selector - CSS selector or Locator instance
+     */
     page.assertDisabled = function assertDisabled(selector) {
       return retryTest(retrySettings, async () => {
         const isDisabled = await getLocator(selector, this).isDisabled({ timeout: 2000 })
@@ -378,6 +520,11 @@ export const addAssertions = {
       })
     }
 
+    /**
+     * Asserts that an element is not disabled
+     *
+     * @param selector - CSS selector or Locator instance
+     */
     page.assertNotDisabled = function assertNotDisabled(selector) {
       return retryTest(retrySettings, async () => {
         const isDisabled = await getLocator(selector, this).isDisabled({ timeout: 2000 })
@@ -391,6 +538,12 @@ export const addAssertions = {
       })
     }
 
+    /**
+     * Asserts that an input, textarea, or select element has the expected value
+     *
+     * @param selector - CSS selector or Locator instance
+     * @param expectedValue - The expected input value
+     */
     page.assertInputValue = function assertInputValue(selector, expectedValue) {
       return retryTest(retrySettings, async () => {
         let inputValue: string | undefined
@@ -419,6 +572,12 @@ export const addAssertions = {
       })
     }
 
+    /**
+     * Asserts that a select element has the expected selected options
+     *
+     * @param selector - CSS selector string
+     * @param expectedValues - Array of expected selected option values
+     */
     page.assertSelectedOptions = function assertSelectedOptions(selector, expectedValues) {
       return retryTest(retrySettings, async () => {
         const element = await this.$eval(selector, (node) => {

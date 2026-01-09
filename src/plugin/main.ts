@@ -21,9 +21,33 @@ import { cleanTracesHook, traceActionsHook } from './hooks/trace_actions.js'
 import { createContextHook, createFakeContextHook } from './hooks/create_context.js'
 
 /**
- * Browser client plugin configures the lifecycle hooks to
- * create playwright browser instances and browser context
- * when running a test or a suite.
+ * Browser client plugin configures the lifecycle hooks to create
+ * Playwright browser instances and browser contexts when running
+ * tests or suites.
+ *
+ * This is the main entry point for the @japa/browser-client plugin.
+ *
+ * @param config - Plugin configuration options
+ *
+ * @example
+ * ```ts
+ * import { browserClient } from '@japa/browser-client'
+ *
+ * export const plugins: Config['plugins'] = [
+ *   browserClient({
+ *     runInSuites: ['browser'],
+ *     tracing: {
+ *       enabled: true,
+ *       event: 'onError',
+ *       cleanOutputDirectory: true,
+ *       outputDirectory: './traces'
+ *     },
+ *     contextOptions: {
+ *       viewport: { width: 1280, height: 720 }
+ *     }
+ *   })
+ * ]
+ * ```
  */
 export function browserClient(config: PluginConfig) {
   const clientPlugin: PluginFn = function (japa) {
