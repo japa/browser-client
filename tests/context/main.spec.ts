@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import cookie from 'cookie'
+import { serialize } from 'cookie-es'
 import { test } from '@japa/runner'
 import { chromium } from 'playwright'
 
@@ -18,7 +18,7 @@ test.group('Browser context', () => {
   test('get response cookies reflected on context', async ({ assert, cleanup }) => {
     const server = new ServerFactory()
     await server.create((_, res) => {
-      res.setHeader('set-cookie', cookie.serialize('user_id', '1'))
+      res.setHeader('set-cookie', serialize('user_id', '1'))
       res.write('hello world')
       res.end()
     })
